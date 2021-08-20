@@ -27,10 +27,7 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
         mBinding.findViewmodel = viewModel // 绑定布局的viewModel
     }
 
-    private fun initView() {
-        mBinding.toolbar.apply {
-            title = getString(R.string.find_name)
+    override fun initView(savedInstanceState: Bundle?) {
 
-        }
     }
 }

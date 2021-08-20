@@ -25,4 +25,8 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.magazineViewmodel = viewModel // 绑定布局的viewModel
     }
+
+    override fun initView(savedInstanceState: Bundle?) {
+
+    }
 }

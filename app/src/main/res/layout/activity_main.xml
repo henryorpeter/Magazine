@@ -16,17 +16,18 @@
         android:background="@color/boday"
         tools:context=".ui.activity.MainActivity">
 
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_fragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/rg_tab"
+            app:layout_constraintBottom_toBottomOf="@+id/rg_tab"
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioGroup
             android:id="@+id/rg_tab"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="75dp"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:background="@drawable/bottom"
@@ -39,12 +40,12 @@
                 android:id="@+id/rb_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="1"
                 android:button="@null"
                 android:checked="true"
-                android:gravity="center_horizontal|bottom"
+                android:gravity="center"
                 android:paddingBottom="@dimen/dp_5"
                 android:text="首页"
                 android:textColor="@drawable/text_color_selector" />
@@ -53,11 +54,11 @@
                 android:id="@+id/rb_add"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="1"
                 android:button="@null"
-                android:gravity="center_horizontal|bottom"
+                android:gravity="center"
                 android:paddingBottom="@dimen/dp_5"
                 android:text="杂志"
                 android:textColor="@drawable/text_color_selector" />
@@ -66,11 +67,11 @@
                 android:id="@+id/rb_find"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="1"
                 android:button="@null"
-                android:gravity="center_horizontal|bottom"
+                android:gravity="center"
                 android:paddingBottom="@dimen/dp_5"
                 android:text="收藏"
                 android:textColor="@drawable/text_color_selector" />
@@ -79,11 +80,11 @@
                 android:id="@+id/rb_others"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="@dimen/dp_12"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="1"
                 android:button="@null"
-                android:gravity="center_horizontal|bottom"
+                android:gravity="center"
                 android:paddingBottom="@dimen/dp_5"
                 android:text="我的"
                 android:textColor="@drawable/text_color_selector" />

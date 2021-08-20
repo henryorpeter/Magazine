@@ -6,4 +6,13 @@
     <string name="find_name">我的收藏</string>
     <string name="mine_name">我的</string>
 
+    <string name="mine_yszc">隐私政策</string>
+    <string name="mine_sghp">赏个好评</string>
+    <string name="mine_lxkf">联系客服</string>
+    <string name="mine_gywm">关于我们</string>
+    <string name="mine_yhxy">用户协议</string>
+    <string name="mine_jcgx">检查更新</string>
+
+    <string name="erro">服务器异常，请稍后再试！</string>
+
 </resources>
