@@ -2,6 +2,7 @@ package com.juguo.magazine.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import androidx.fragment.app.viewModels
 import com.juguo.magazine.R
 import com.juguo.magazine.adapter.ViewBindingSampleAdapter
@@ -39,6 +40,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun initBVP() {
         mViewPager.apply {
             setLifecycleRegistry(lifecycle)
+            setIndicatorVisibility(GONE)   //banner小圆点不可见
             adapter = ViewBindingSampleAdapter(resources.getDimensionPixelOffset(R.dimen.dp_12))
             setOnPageClickListener { _: View, position: Int -> itemClick(position) }
             setInterval(4000)
