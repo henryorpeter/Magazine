@@ -1,14 +1,12 @@
 package com.juguo.magazine.remote
 
-import com.juguo.magazine.bean.BaseBean
-import com.juguo.magazine.bean.HelpResponseBean
-import com.juguo.magazine.bean.PrivacyBean
-import com.juguo.magazine.bean.VersionUpdateBean
+import com.juguo.magazine.bean.*
 import io.reactivex.Observable
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 /**
  *  author : Administrator
@@ -32,5 +30,18 @@ interface ApiService {
     //版本更新
     @POST("app-v/check")
     fun getUpdate(@Body body: RequestBody?): Observable<VersionUpdateBean>
+
+    //瀑布流
+    @POST("res-ext/list")
+    fun getList(@Body bean: RequestBody?): Observable<PieceBean>
+
+    //分类相关
+    @POST("category/list")
+    fun getCategory(@Body bean: RequestBody?): Observable<CategoryBean>
+
+    //收藏动画
+    @POST("res/{resId}/{starType}/")
+    fun favoritesImages(
+        @Path("resId") resId: String?, @Path("starType") starType: Int): Observable<FavoritesBean>
 
 }

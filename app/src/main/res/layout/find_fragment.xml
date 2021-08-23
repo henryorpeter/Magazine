@@ -45,5 +45,27 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_131"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+            android:background="@mipmap/par_shoucang" />
+
+        <cn.lemon.view.RefreshRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/dp_25"
+            android:layout_marginRight="@dimen/dp_25"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

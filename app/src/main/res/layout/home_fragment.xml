@@ -99,6 +99,7 @@
                         android:background="@mipmap/ic_new" />
 
                     <LinearLayout
+                        android:id="@+id/more_new"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="right">
@@ -121,12 +122,11 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
+                <cn.lemon.view.RefreshRecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_150"
                     android:layout_marginTop="@dimen/dp_17"
-                    android:background="@color/teal_700"
                     android:layout_marginLeft="@dimen/dp_14"
                     android:layout_marginRight="@dimen/dp_14"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -161,11 +161,10 @@
                         android:background="@mipmap/ic_hot" />
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
+                <cn.lemon.view.RefreshRecyclerView
                     android:id="@+id/recyclerView_tuijian"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_500"
-                    android:background="@color/red_checked_color"
+                    android:layout_height="580dp"
                     android:layout_marginTop="@dimen/dp_20"
                     android:layout_marginLeft="@dimen/dp_14"
                     android:layout_marginRight="@dimen/dp_14"

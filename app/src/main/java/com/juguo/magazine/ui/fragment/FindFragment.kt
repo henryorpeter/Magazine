@@ -28,6 +28,10 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        onClick()
+    }
+
+    fun onClick(){
 
     }
 }
