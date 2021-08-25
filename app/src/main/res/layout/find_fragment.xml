@@ -57,11 +57,13 @@
             android:background="@mipmap/par_shoucang" />
 
         <cn.lemon.view.RefreshRecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerView_find"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_25"
             android:layout_marginRight="@dimen/dp_25"
+            android:layout_marginBottom="@dimen/dp_25"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -11,6 +11,7 @@ import android.view.View.GONE
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import cn.lemon.view.adapter.Action
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -26,9 +27,10 @@ import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.ui.activity.DetailedNewsActivity
 import com.juguo.magazine.ui.activity.FashionMagazineActivity
-import com.juguo.magazine.ui.activity.HelpActivity
+import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.util.ToastUtil
 import com.juguo.magazine.viewmodel.HomeViewModel
+import com.kingja.loadsir.core.LoadService
 import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.annotation.APageStyle
 import com.zhpan.bannerview.constants.PageStyle
@@ -38,9 +40,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.home_fragment.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import java.util.*
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     private lateinit var mViewPager: BannerViewPager<Int>
     override val getLayoutId = R.layout.home_fragment
     private val viewModel: HomeViewModel by viewModels()
@@ -53,6 +56,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     var priceNew: MutableLiveData<List<PieceBean.Price>> = MutableLiveData<List<PieceBean.Price>>()
     @JvmField
     protected var mApiService = RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
+
     companion object {
         fun newInstance() = HomeFragment()
     }
@@ -74,10 +78,27 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         handler.postDelayed({
             promPtf()
             moreNews()
-
             hotInformation()
             hotPromPtf()
         }, 300)
+
+        //初始化 SwipeRefreshLayout
+        swipeRefresh.init {
+            //触发刷新监听时请求数据
+            promPtf()
+            moreNews()
+            hotInformation()
+            hotPromPtf()
+        }
+    }
+
+    //初始化 SwipeRefreshLayout
+    fun SwipeRefreshLayout.init(onRefreshListener: () -> Unit) {
+        this.run {
+            setOnRefreshListener {
+                onRefreshListener.invoke()
+            }
+        }
     }
 
     private fun initBVP() {
@@ -128,6 +149,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     fun getNewsData(isRefresh: Boolean) {
+        val loadProgressDialog = LoadProgressDialog(context, "数据加载中……")
+        loadProgressDialog.show()
         mHandler.postDelayed(Runnable {
             if (isRefresh) {
                 page = 1
@@ -135,7 +158,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 mAdapter.addAll(priceNew.getValue())
                 recyclerView.dismissSwipeRefresh()
                 recyclerView.getRecyclerView().scrollToPosition(0)
+                loadProgressDialog.dismiss()
             } else if (page == 5) {
+                //加载错误
                 mAdapter.showLoadMoreError()
             } else {
                 mAdapter.addAll(priceNew.getValue())
@@ -147,14 +172,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     fun getData(isRefresh: Boolean) {
+        val loadProgressDialog = LoadProgressDialog(context, "数据加载中……")
+        loadProgressDialog.show()
         mHandler.postDelayed(Runnable {
             if (isRefresh) {
                 page = 1
-
                 //热门
                 mHotAdapter.clear()
                 mHotAdapter.addAll(price.getValue())
-
+                loadProgressDialog.dismiss()
                 //热门
                 recyclerView_tuijian.dismissSwipeRefresh()
                 recyclerView_tuijian.getRecyclerView().scrollToPosition(0)
@@ -176,6 +202,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun promPtf() {
         mHandler = Handler(Looper.myLooper()!!)
         mAdapter = NewRecordAdapter(context)
+        mAdapter.run { getNewsData(true) }
         recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
         recyclerView.setLayoutManager(GridLayoutManager(context, 3))
         recyclerView.setAdapter(mAdapter)
@@ -290,7 +317,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
      * 热门资讯2
      */
     fun hotInformation() {
-        val map: MutableMap<String, Any> = mutableMapOf(
+        val map= mutableMapOf(
             "order" to "desc",
             "sort" to "add_time",
             "type" to 312
@@ -311,10 +338,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 )
                 price.postValue(pieceBean.getPrice())
             }) { throwable ->
-                Log.d(
-                    ContentValues.TAG,
-                    "loadMore: $throwable"
-                )
+                Log.d(ContentValues.TAG, "loadMore: $throwable")
             })
     }
 

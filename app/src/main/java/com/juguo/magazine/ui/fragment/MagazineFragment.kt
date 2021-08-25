@@ -26,6 +26,7 @@ import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.ui.activity.ClassifitionDetailsActivity
 import com.juguo.magazine.ui.activity.DetailedNewsActivity
 import com.juguo.magazine.ui.activity.FashionMagazineActivity
+import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.viewmodel.MagazineViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -60,6 +61,8 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
     }
 
     fun getData(isRefresh: Boolean) {
+        val loadProgressDialog = LoadProgressDialog(context, "数据加载中……")
+        loadProgressDialog.show()
         mHandler.postDelayed(Runnable {
             if (isRefresh) {
                 page = 1
@@ -67,6 +70,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
                 mClassifitoinAdapter.addAll(price.getValue())
                 recyclerView_fenlei.dismissSwipeRefresh()
                 recyclerView_fenlei.getRecyclerView().scrollToPosition(0)
+                loadProgressDialog.dismiss()
             } else if (page == 5) {
                 mClassifitoinAdapter.showLoadMoreError()
             } else {
@@ -138,13 +142,13 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ pieceBean ->
                 Log.d(
-                    ContentValues.TAG,
+                    TAG,
                     "loadMore?>>>>>>>>>>>>>>>>>>>>: $pieceBean"
                 )
                 price.postValue(pieceBean.category)
             }) { throwable ->
                 Log.d(
-                    ContentValues.TAG,
+                    TAG,
                     "loadMore: $throwable"
                 )
             })

@@ -39,9 +39,19 @@ interface ApiService {
     @POST("category/list")
     fun getCategory(@Body bean: RequestBody?): Observable<CategoryBean>
 
-    //收藏动画
+    //收藏
     @POST("res/{resId}/{starType}/")
     fun favoritesImages(
+        @Path("resId") resId: String?,
+        @Path("starType") starType: Int): Observable<FavoritesBean>
+
+    //取消收藏
+    @POST("res/{resId}/{starType}/")
+    fun deleFavoritesImages(
         @Path("resId") resId: String?, @Path("starType") starType: Int): Observable<FavoritesBean>
+
+    //获取收藏列表
+    @POST("res-ext/star-list")
+    fun favoritesListBean(@Body bean: RequestBody?): Observable<FavoritesListBean>
 
 }

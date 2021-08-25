@@ -7,22 +7,23 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.juguo.magazine.App;
 import com.juguo.magazine.R;
+import com.juguo.magazine.bean.FavoritesListBean;
 import com.juguo.magazine.bean.PieceBean;
 
 import cn.lemon.view.adapter.BaseViewHolder;
 
-public class HotRecordHolder extends BaseViewHolder<PieceBean.Price> {
+public class FindRecordHolder extends BaseViewHolder<FavoritesListBean.Favorites> {
 
     private TextView beep;
     private ImageView imageViewUrl;
     private TextView textViewHot;
 
-    public HotRecordHolder(ViewGroup parent) {
-        super(parent, R.layout.hot_consume);
+    public FindRecordHolder(ViewGroup parent) {
+        super(parent, R.layout.find_consume);
     }
 
     @Override
-    public void setData(final PieceBean.Price photoBean) {
+    public void setData(final FavoritesListBean.Favorites photoBean) {
         super.setData(photoBean);
         //getsData();
         beep.setText(photoBean.getName());

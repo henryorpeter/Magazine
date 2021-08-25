@@ -32,6 +32,7 @@
         <activity android:name=".ui.activity.UserAgreementActivity" />
         <activity android:name=".ui.activity.FashionMagazineActivity" />
         <activity android:name=".ui.activity.ClassifitionDetailsActivity"/>
+        <activity android:name=".ui.activity.FindDetailedActivity"/>
     </application>
 
 </manifest>
