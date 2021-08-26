@@ -1,27 +1,15 @@
 package com.juguo.magazine.ui.activity
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
-import com.juguo.getRequestBody
-import com.juguo.magazine.App
 import com.juguo.magazine.R
-import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.util.*
-import com.juguo.magazine.viewmodel.MainViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_privacy.*
 
 /**

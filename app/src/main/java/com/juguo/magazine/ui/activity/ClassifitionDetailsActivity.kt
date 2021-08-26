@@ -105,7 +105,7 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding>
         })
         mAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), DetailedNewsActivity::class.java)
+            intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get(PieceBean.Price::class.java)

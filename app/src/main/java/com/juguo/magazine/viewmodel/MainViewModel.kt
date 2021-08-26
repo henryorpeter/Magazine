@@ -10,8 +10,6 @@ import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.util.DeviceIdUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.RequestBody
 
 
 class MainViewModel : BaseViewModel() {
@@ -37,7 +35,7 @@ class MainViewModel : BaseViewModel() {
                     Log.i(TAG, "Login_>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + Gson().toJson(it))
                     //保存result_token
                     val sp: SharedPreferences =
-                        App.getContext().getSharedPreferences("sp", Context.MODE_PRIVATE)
+                        App.sInstance.getSharedPreferences("sp", Context.MODE_PRIVATE)
                     val editor: SharedPreferences.Editor = sp.edit()
                     editor.putString("result_token", it.getResult()).apply()
                     //                        getLoadingLiveData().getDismissDialog().setValue(false);

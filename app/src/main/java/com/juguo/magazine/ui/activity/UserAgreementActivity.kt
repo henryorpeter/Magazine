@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.gyf.barlibrary.ImmersionBar
-import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.util.UITools

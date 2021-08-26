@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide;
 import com.juguo.magazine.App;
 import com.juguo.magazine.R;
 import com.juguo.magazine.bean.CategoryBean;
-import com.juguo.magazine.bean.PieceBean;
 
 import cn.lemon.view.adapter.BaseViewHolder;
 
@@ -28,7 +27,7 @@ public class ClassifitionRecordHolder extends BaseViewHolder<CategoryBean.Catego
         beep.setText(photoBean.getName());
         //图片加载......
         String url = photoBean.getDetail();
-        Glide.with(App.getContext())
+        Glide.with(App.sInstance)
                 .load(url)
                 .into(imageViewUrl);
     }

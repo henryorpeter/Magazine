@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="bean"
+            type="com.juguo.magazine.bean.PieceBean.Price" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,21 +15,34 @@
 
         <ImageView
             android:id="@+id/imageView_new"
-            android:layout_width="93dp"
-            android:layout_height="124dp"
+            android:layout_width="@dimen/dp_168"
+            android:layout_height="@dimen/dp_198"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:showImage="@{bean.coverImgUrl}" />
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="@dimen/dp_120"
+            android:layout_width="@dimen/dp_150"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
+            android:layout_marginTop="6dp"
+            android:text="@{bean.name}"
             android:gravity="center"
+            android:ellipsize="end"
+            android:lines="1"
             app:layout_constraintEnd_toEndOf="@+id/imageView_new"
             app:layout_constraintStart_toStartOf="@+id/imageView_new"
             app:layout_constraintTop_toBottomOf="@+id/imageView_new" />
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="@dimen/dp_22"
+            android:background="@mipmap/more_ljyd"
+            android:layout_marginTop="@dimen/dp_7"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_new"
+            app:layout_constraintStart_toStartOf="@+id/imageView_new"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

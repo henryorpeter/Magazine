@@ -4,16 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.juguo.getRequestBody
 import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.util.CommUtils
-import com.juguo.magazine.util.DeviceIdUtil
 import com.juguo.magazine.util.ToastUtil
-import constant.UiType
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
@@ -32,13 +28,13 @@ class MineViewModel : BaseViewModel() {
      */
     fun UpdaterApp() {
         val sp: SharedPreferences =
-            App.getContext().getSharedPreferences("sp", Context.MODE_PRIVATE)
+            App.sInstance.getSharedPreferences("sp", Context.MODE_PRIVATE)
         val uuid_token = sp.getString("uuid_token", "") // 拼接的url参数
 
         val map: MutableMap<String, Any> = mutableMapOf(
             "appId" to WX_APP_ID,
             "channel" to "",
-            "currentV" to CommUtils.getVersionNumber(App.getContext())
+            "currentV" to CommUtils.getVersionNumber(App.sInstance)
         )
         //{"param":{map}}
         val param: MutableMap<String, Any> = mutableMapOf("param" to map)
@@ -57,7 +53,7 @@ class MineViewModel : BaseViewModel() {
                     if (versionUpdateBean.getResult().getUpdateV() != null) {
                         if (!TextUtils.isEmpty(versionUpdateBean.getResult().getUrl())) {
                             //保存result_token
-                            val sp: SharedPreferences = App.getContext()
+                            val sp: SharedPreferences = App.sInstance
                                 .getSharedPreferences("apkUrl", Context.MODE_PRIVATE)
                             val editor = sp.edit()
                             editor.putString("apkUrl", versionUpdateBean.getResult().getUrl())
@@ -81,10 +77,10 @@ class MineViewModel : BaseViewModel() {
                                 .updateConfig(updateConfig)
                                 .update()
                         } else {
-                            ToastUtil.showLongToast(App.getContext(), "已经是最新版本")
+                            ToastUtil.showLongToast(App.sInstance, "已经是最新版本")
                         }
                     } else {
-                        ToastUtil.showLongToast(App.getContext(), "已经是最新版本")
+                        ToastUtil.showLongToast(App.sInstance, "已经是最新版本")
                     }
                 },
                     Consumer<Throwable> { throwable -> Log.d(TAG, "loadMore: $throwable") })

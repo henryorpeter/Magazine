@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide;
 import com.juguo.magazine.App;
 import com.juguo.magazine.R;
 import com.juguo.magazine.bean.FavoritesListBean;
-import com.juguo.magazine.bean.PieceBean;
 
 import cn.lemon.view.adapter.BaseViewHolder;
 
@@ -31,7 +30,7 @@ public class FindRecordHolder extends BaseViewHolder<FavoritesListBean.Favorites
         textViewHot.setText(viewHot+"人阅读");
         //图片加载......
         String url = photoBean.getCoverImgUrl();
-        Glide.with(App.getContext())
+        Glide.with(App.sInstance)
                 .load(url)
                 .into(imageViewUrl);
     }

@@ -356,7 +356,7 @@ public class CommUtils {
     /****设置状态  false为安装后第一次登录，true为已经登录过****/
     public static void setState()
     {
-        SharedPreferences sp = App.getContext().getSharedPreferences("save.Login", Context.MODE_PRIVATE);
+        SharedPreferences sp = App.sInstance.getSharedPreferences("save.Login", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("isLogin", true);
         editor.commit();
@@ -364,7 +364,7 @@ public class CommUtils {
     /***获取状态***/
     public static boolean getState()
     {
-        SharedPreferences sp = App.getContext().getSharedPreferences("save.Login", Context.MODE_PRIVATE);
+        SharedPreferences sp = App.sInstance.getSharedPreferences("save.Login", Context.MODE_PRIVATE);
         return (boolean) sp.getBoolean("isLogin", false);
     }
 

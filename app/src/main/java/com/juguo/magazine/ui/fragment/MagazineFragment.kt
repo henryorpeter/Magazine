@@ -1,6 +1,5 @@
 package com.juguo.magazine.ui.fragment
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -19,13 +18,10 @@ import com.juguo.magazine.R
 import com.juguo.magazine.adapter.ClassifitionRecordAdapter
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.CategoryBean
-import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.MagazineFragmentBinding
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.ui.activity.ClassifitionDetailsActivity
-import com.juguo.magazine.ui.activity.DetailedNewsActivity
-import com.juguo.magazine.ui.activity.FashionMagazineActivity
 import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.viewmodel.MagazineViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -113,7 +109,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
         })
         mClassifitoinAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), ClassifitionDetailsActivity::class.java)
+            intent.setClass(App.sInstance, ClassifitionDetailsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get("CategoryKey",CategoryBean.Category::class.java)

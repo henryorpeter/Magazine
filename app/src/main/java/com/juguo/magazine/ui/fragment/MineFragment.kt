@@ -43,39 +43,39 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
 
     private fun onClick() {
         mBinding.linearLayout5.setOnClickListener {
-            ToastUtil.showToast(App.getContext(), "清理缓存成功")
+            ToastUtil.showToast(App.sInstance, "清理缓存成功")
         }
         mBinding.linearLayoutYdjl.setOnClickListener {
             ToastUtil.showToast(
-                App.getContext(),
+                App.sInstance,
                 "阅读记录？？？？？？？？？？？？？？？？？？？？？？？？？"
             )
         }
         mBinding.linearLayoutYszc.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.getContext(), PrivacyActivity::class.java)
+            intent.setClass(App.sInstance, PrivacyActivity::class.java)
             startActivity(intent)
         }
         mBinding.linearLayoutSghp.setOnClickListener {
             if (installedMarketPkgs != null && installedMarketPkgs.size > 0) {
                 showSelectDialog()
             } else {
-                ToastUtil.showLongToast(App.getContext(), "手机暂无应用商店")
+                ToastUtil.showLongToast(App.sInstance, "手机暂无应用商店")
             }
         }
         mBinding.linearLayoutLxkf.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.getContext(), HelpActivity::class.java)
+            intent.setClass(App.sInstance, HelpActivity::class.java)
             startActivity(intent)
         }
         mBinding.linearLayoutGywm.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.getContext(), AboutActivity::class.java)
+            intent.setClass(App.sInstance, AboutActivity::class.java)
             startActivity(intent)
         }
         mBinding.linearLayoutYhxy.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.getContext(), UserAgreementActivity::class.java)
+            intent.setClass(App.sInstance, UserAgreementActivity::class.java)
             intent.putExtra("url", "file:///android_asset/web/UserLicenseAgreement.html")
             startActivity(intent)
         }
@@ -89,11 +89,11 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
      */
     private fun showSelectDialog() {
         val dialog: AlertDialog
-        val diaView = View.inflate(App.getContext(), R.layout.gwhp_popupwindow, null)
+        val diaView = View.inflate(App.sInstance, R.layout.gwhp_popupwindow, null)
         val grid_view: NoScrollGridView = diaView.findViewById(R.id.grid_view)
-        val gwhpPopupwindowAdapter = GwhpPopupwindowAdapter(App.getContext(), installedMarketPkgs)
+        val gwhpPopupwindowAdapter = GwhpPopupwindowAdapter(App.sInstance, installedMarketPkgs)
         grid_view.setAdapter(gwhpPopupwindowAdapter)
-        val builder = AlertDialog.Builder(App.getContext())
+        val builder = AlertDialog.Builder(App.sInstance)
         builder.setView(diaView)
         dialog = builder.create()
         dialog.setCanceledOnTouchOutside(true)
@@ -109,8 +109,8 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
         grid_view.setOnItemClickListener(OnItemClickListener { parent, view, position, id -> // 跳转应用商店
             val marketPkgsBean: MarketPkgsBean = installedMarketPkgs!!.get(position)
             CommUtils.launchAppDetail(
-                App.getContext(),
-                CommUtils.getApkPkgName(App.getContext()),
+                App.sInstance,
+                CommUtils.getApkPkgName(App.sInstance),
                 marketPkgsBean.getPkgName()
             )
             dialog.dismiss()

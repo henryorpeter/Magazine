@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/imageView_tops"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_265"
+            android:layout_height="@dimen/dp_245"
             android:background="@drawable/mine_top_shaps"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

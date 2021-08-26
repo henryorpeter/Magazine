@@ -14,11 +14,8 @@ import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
-import com.juguo.magazine.adapter.HotRecordAdapter
 import com.juguo.magazine.adapter.MoreNewRecordAdapter
-import com.juguo.magazine.adapter.NewRecordAdapter
 import com.juguo.magazine.base.BaseActivity
-import com.juguo.magazine.bean.CategoryBean
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.FashionMagazineActivityBinding
 import com.juguo.magazine.remote.ApiService
@@ -104,7 +101,7 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding>() {
         })
         mAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), DetailedNewsActivity::class.java)
+            intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get(PieceBean.Price::class.java)

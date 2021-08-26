@@ -17,9 +17,7 @@ import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
-import com.juguo.magazine.adapter.HotRecordAdapter
-import com.juguo.magazine.adapter.NewRecordAdapter
-import com.juguo.magazine.adapter.ViewBindingSampleAdapter
+import com.juguo.magazine.adapter.*
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.HomeFragmentBinding
@@ -28,7 +26,6 @@ import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.ui.activity.DetailedNewsActivity
 import com.juguo.magazine.ui.activity.FashionMagazineActivity
 import com.juguo.magazine.util.LoadProgressDialog
-import com.juguo.magazine.util.ToastUtil
 import com.juguo.magazine.viewmodel.HomeViewModel
 import com.kingja.loadsir.core.LoadService
 import com.zhpan.bannerview.BannerViewPager
@@ -44,7 +41,7 @@ import okhttp3.RequestBody
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     //界面状态管理者
     private lateinit var loadsir: LoadService<Any>
-    private lateinit var mViewPager: BannerViewPager<Int>
+    private lateinit var mViewPager: BannerViewPager<PieceBean.Price>
     override val getLayoutId = R.layout.home_fragment
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var mAdapter: NewRecordAdapter
@@ -67,20 +64,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        mViewPager = mBinding.bannerView as BannerViewPager<Int>
+        mViewPager = mBinding.bannerView as BannerViewPager<PieceBean.Price>
         initBVP()
         onClick()
-        setupBanner(
-            PageStyle.MULTI_PAGE_SCALE,
-            resources.getDimensionPixelOffset(R.dimen.dp_50)
-        )
+
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             promPtf()
             moreNews()
             hotInformation()
             hotPromPtf()
-        }, 300)
+        }, 200)
 
         //初始化 SwipeRefreshLayout
         swipeRefresh.init {
@@ -89,6 +83,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             moreNews()
             hotInformation()
             hotPromPtf()
+            swipeRefresh.setRefreshing(false)
         }
     }
 
@@ -105,10 +100,16 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         mViewPager.apply {
             setLifecycleRegistry(lifecycle)
             setIndicatorVisibility(GONE)   //banner小圆点不可见
-            adapter = ViewBindingSampleAdapter(resources.getDimensionPixelOffset(R.dimen.dp_12))
-            setOnPageClickListener { _: View, position: Int -> itemClick(position) }
+            adapter = HomeLoopAdapter().apply {
+                onItemDataCallback={ _, data ->
+                    itemClick(data)
+                }
+            }
+            //setOnPageClickListener { _ , pieceBean -> itemClick(pieceBean)}不用设置参数类型
+
             setInterval(4000)
         }
+
     }
 
     /**
@@ -126,24 +127,27 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         leftRevealWidth: Int,
         rightRevealWidth: Int) {
         mViewPager
-            .setPageMargin(resources.getDimensionPixelOffset(R.dimen.dp_30))
+            .setPageMargin(resources.getDimensionPixelOffset(R.dimen.dp_50))
             .setScrollDuration(800)
             .setRevealWidth(leftRevealWidth, rightRevealWidth)
             .setPageStyle(pageStyle)
-            .create(getPicList(4))
+            .create(priceNew.value) //List<T> data == List<PieceBean.Price>
+
     }
 
-    private fun itemClick(position: Int) {
-        if (position != mViewPager.currentItem) {
-            mViewPager.setCurrentItem(position, true)
-        }
-        ToastUtil.showLongToast(context,"点击了:$position")
+    private fun itemClick(bean: PieceBean.Price) {
+        val intent = Intent()
+        intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
+        startActivity(intent)
+        LiveEventBus
+            .get(PieceBean.Price::class.java)
+            .post(bean)
     }
 
     private fun onClick(){
         more_new.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.getContext(), FashionMagazineActivity::class.java)
+            intent.setClass(App.sInstance, FashionMagazineActivity::class.java)
             startActivity(intent)
         }
     }
@@ -180,10 +184,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 //热门
                 mHotAdapter.clear()
                 mHotAdapter.addAll(price.getValue())
-                loadProgressDialog.dismiss()
                 //热门
                 recyclerView_tuijian.dismissSwipeRefresh()
                 recyclerView_tuijian.getRecyclerView().scrollToPosition(0)
+                loadProgressDialog.dismiss()
             } else if (page == 5) {
                 mHotAdapter.showLoadMoreError()
             } else {
@@ -202,7 +206,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun promPtf() {
         mHandler = Handler(Looper.myLooper()!!)
         mAdapter = NewRecordAdapter(context)
-        mAdapter.run { getNewsData(true) }
         recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
         recyclerView.setLayoutManager(GridLayoutManager(context, 3))
         recyclerView.setAdapter(mAdapter)
@@ -231,7 +234,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         })
         mAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), DetailedNewsActivity::class.java)
+            intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get(PieceBean.Price::class.java)
@@ -262,7 +265,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         ContentValues.TAG,
                         "loadMore: $pieceBean"
                     )
-                    priceNew.postValue(pieceBean.getPrice())
+                    priceNew.value =pieceBean.price//主线程用setValue
+
+                    setupBanner(
+                        PageStyle.MULTI_PAGE_SCALE,
+                        resources.getDimensionPixelOffset(R.dimen.dp_80)
+                    )
                 }) { throwable ->
                     Log.d(
                         ContentValues.TAG,
@@ -305,7 +313,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         })
         mHotAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), DetailedNewsActivity::class.java)
+            intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get(PieceBean.Price::class.java)
@@ -336,7 +344,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     ContentValues.TAG,
                     "loadMore: $pieceBean"
                 )
-                price.postValue(pieceBean.getPrice())
+                price.value = pieceBean.price
             }) { throwable ->
                 Log.d(ContentValues.TAG, "loadMore: $throwable")
             })

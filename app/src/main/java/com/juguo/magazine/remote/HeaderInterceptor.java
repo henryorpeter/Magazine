@@ -12,8 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HeaderInterceptor implements Interceptor {
-    SharedPreferences sp = App
-            .getContext()
+    SharedPreferences sp = App.sInstance
             .getSharedPreferences("sp", Context.MODE_PRIVATE);
 
     @Override

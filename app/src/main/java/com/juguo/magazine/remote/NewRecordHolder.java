@@ -27,7 +27,7 @@ public class NewRecordHolder extends BaseViewHolder<PieceBean.Price> {
         beep.setText(photoBean.getName());
         //图片加载......
         String url = photoBean.getCoverImgUrl();
-        Glide.with(App.getContext())
+        Glide.with(App.sInstance)
                 .load(url)
                 .into(imageViewUrl);
     }

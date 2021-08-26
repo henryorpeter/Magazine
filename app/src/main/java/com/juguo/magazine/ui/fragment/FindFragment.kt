@@ -2,13 +2,11 @@ package com.juguo.magazine.ui.fragment
 
 import android.content.ContentValues
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.core.util.Consumer
 import cn.lemon.view.adapter.Action
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -18,17 +16,13 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.adapter.FindRecordAdapter
-import com.juguo.magazine.adapter.HotRecordAdapter
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.FavoritesListBean
-import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.FindFragmentBinding
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
-import com.juguo.magazine.ui.activity.DetailedNewsActivity
 import com.juguo.magazine.ui.activity.FindDetailedActivity
 import com.juguo.magazine.util.LoadProgressDialog
-import com.juguo.magazine.util.ToastUtil
 import com.juguo.magazine.viewmodel.FindViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -134,7 +128,7 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
 
         mHotAdapter.setOnItemClickListener { data ->
             val intent = Intent()
-            intent.setClass(App.getContext(), FindDetailedActivity::class.java)
+            intent.setClass(App.sInstance, FindDetailedActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get("favoritesKey", FavoritesListBean.Favorites::class.java)

@@ -35,15 +35,6 @@ abstract class BaseFragment<DB : ViewDataBinding> : Fragment() {
         initView(savedInstanceState)
     }
 
-    protected fun getPicList(count: Int): MutableList<Int> {
-        mPictureList.clear()
-        for (i in 0..count) {
-            val mipmap = resources.getIdentifier("advertise$i", "mipmap", App.getContext().packageName)
-            mPictureList.add(mipmap)
-        }
-        return mPictureList;
-    }
-
     /**
      * 初始化数据
      */

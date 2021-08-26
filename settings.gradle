@@ -1,2 +1,3 @@
 rootProject.name = "Magazine"
 include ':app'
+include ':Lib_Ad'
