@@ -54,4 +54,8 @@ interface ApiService {
     @POST("res-ext/star-list")
     fun favoritesListBean(@Body bean: RequestBody?): Observable<FavoritesListBean>
 
+    //根据APPid获取信息
+    @GET("app/appid/{appId}")
+    fun getAppIdAdvertise(@Path("appId") appId: String?): Observable<AppIdBean>
+
 }

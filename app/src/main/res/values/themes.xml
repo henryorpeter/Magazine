@@ -29,4 +29,11 @@
         <!--<item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>-->
     </style>
+
+    <style name="startactivitytheme" parent="android:Theme.Light.NoTitleBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@mipmap/bg_splash</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
 </resources>

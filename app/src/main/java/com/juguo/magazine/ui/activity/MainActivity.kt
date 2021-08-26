@@ -6,11 +6,17 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.fenghuajueli.lib_ad.AdShowUtils
+import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.adapter.AdapterFragmentPager
 import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.databinding.ActivityMainBinding
+import com.juguo.magazine.remote.ApiService
+import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.MainViewModel
+import io.reactivex.disposables.CompositeDisposable
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -18,7 +24,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override val getLayoutId = R.layout.activity_main
     private val mViewPager: ViewPager? = null //lateinit：如果不延迟初始化变量，必须要设为null，或者初始化这个变量
     private val mViewModel: MainViewModel by viewModels() //通过kotlin拓展方法创建viewmodel
-
+    private val mDisposable = CompositeDisposable()
+    @JvmField
+    protected var mApiService = RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
     override fun onViewCreate(savedInstanceState: Bundle?) {
         super.onViewCreate(savedInstanceState)
         mBinding.viewModel = mViewModel //绑定布局的viewmodel
@@ -26,6 +34,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         redaGiao()
         initData()
         setListener()
+        initViewAndData()
+        if (App.sInstance.isShowAd) {
+            AdShowUtils.getInstance().loadInteractionAd(this, "main_chaping_ad")
+        }
     }
 
     private fun initData() {
@@ -80,6 +92,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mine_selector.setBounds(0, 0, 70, 70)
         mBinding.rbOthers.setCompoundDrawables(null, mine_selector, null, null)
 
+    }
+
+    private fun initViewAndData() {
+        mDisposable.add(mApiService.getAppIdAdvertise("wx9ooOL2SleR78Slil")
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(TAG, "accept: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                //NONE 无  CSJ 穿山甲  SYS 自系统
+                if ("NONE".contains(startAdFlag)) {
+                } else if ("CSJ" == startAdFlag) {
+                } else if ("SYS" == startAdFlag) {
+                }
+            }) { throwable -> Log.d(TAG, "loadMore: $throwable") })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AdShowUtils.getInstance().destroyInteractionAd("main_chaping_ad")
     }
 
 }

@@ -269,7 +269,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
                     setupBanner(
                         PageStyle.MULTI_PAGE_SCALE,
-                        resources.getDimensionPixelOffset(R.dimen.dp_80)
+                        resources.getDimensionPixelOffset(R.dimen.dp_53)
                     )
                 }) { throwable ->
                     Log.d(

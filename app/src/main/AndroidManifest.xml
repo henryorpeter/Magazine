@@ -18,8 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.DetailedNewsActivity"></activity>
-        <activity android:name=".ui.activity.MainActivity">
+
+        <activity android:name=".ui.activity.CsjSplashActivity"
+            android:theme="@style/startactivitytheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +34,8 @@
         <activity android:name=".ui.activity.FashionMagazineActivity" />
         <activity android:name=".ui.activity.ClassifitionDetailsActivity"/>
         <activity android:name=".ui.activity.FindDetailedActivity"/>
+        <activity android:name=".ui.activity.DetailedNewsActivity"/>
+        <activity android:name=".ui.activity.MainActivity"/>
     </application>
 
 </manifest>

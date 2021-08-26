@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/imageView_new"
-            android:layout_width="@dimen/dp_168"
+            android:layout_width="@dimen/dp_178"
             android:layout_height="@dimen/dp_198"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"

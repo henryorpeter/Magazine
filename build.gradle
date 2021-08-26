@@ -21,7 +21,7 @@ allprojects {
         jcenter() // Warning: this repository is going to shut down soon
         maven { url "https://jitpack.io" }
         flatDir {
-            dirs project(':Lib_Ad').file('libs')
+            dirs project(':Lib_Ads').file('libs')
         }
     }
 }
