@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.gyf.barlibrary.ImmersionBar
 
-abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<DB : ViewDataBinding, T> : AppCompatActivity() {
     private val TAG = "Baseactivty"
     lateinit var mBinding: DB //延迟初始化 --- 在onCreate里面初始化这个变量
     private lateinit var mImmersionBar: ImmersionBar //状态栏沉浸，在statusBarConfig初始化这个变量  lateinit==延迟初始化

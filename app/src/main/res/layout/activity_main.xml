@@ -41,12 +41,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_weight="1"
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
-                android:paddingBottom="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_8"
                 android:text="首页"
                 android:textColor="@drawable/text_color_selector" />
 
@@ -55,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -68,11 +68,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
-                android:paddingBottom="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_8"
                 android:text="收藏"
                 android:textColor="@drawable/text_color_selector" />
 
@@ -81,11 +81,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
-                android:paddingBottom="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_8"
                 android:text="我的"
                 android:textColor="@drawable/text_color_selector" />
         </RadioGroup>

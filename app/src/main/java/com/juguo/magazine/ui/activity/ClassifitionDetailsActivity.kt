@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.home_fragment.recyclerView
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
-class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding>() {
+class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding, Any?>() {
     override val getLayoutId = R.layout.fashion_magazine_activity
     private val mViewModel: FashionMagazineViewModel by viewModels()
     private lateinit var mAdapter: MoreNewRecordAdapter

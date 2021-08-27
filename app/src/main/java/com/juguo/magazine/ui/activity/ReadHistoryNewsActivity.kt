@@ -1,7 +1,6 @@
 package com.juguo.magazine.ui.activity
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
@@ -10,25 +9,20 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.gyf.barlibrary.ImmersionBar
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.bean.PieceBean
-import com.juguo.magazine.bean.ReadBean
-import com.juguo.magazine.event.WX_APP_ID
+import com.juguo.magazine.bean.ReadHistoryBean
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
-import com.juguo.magazine.util.*
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.juguo.magazine.util.HtmlFormatUtil
+import com.juguo.magazine.util.LoadProgressDialog
+import com.juguo.magazine.util.RxUtils
+import com.juguo.magazine.util.ToastUtil
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detailed_news.*
-import kotlinx.android.synthetic.main.fashion_magazine_activity.*
-import okhttp3.MediaType
-import okhttp3.RequestBody
 
-class DetailedNewsActivity : AppCompatActivity() {
+class ReadHistoryNewsActivity : AppCompatActivity() {
 
     private val mDisposable = CompositeDisposable()
 
@@ -42,7 +36,7 @@ class DetailedNewsActivity : AppCompatActivity() {
         back_zhazhi_xq.setOnClickListener { finish() }
         onClick()
         getReadtise()
-        LiveEventBus.get(PieceBean.Price::class.java)
+        LiveEventBus.get("ReadHistoryBean",ReadHistoryBean.ReadHistory::class.java)
             .observeSticky(this, { price ->
                 //写入sp保存图片id
                 val sp = application.getSharedPreferences("sp", MODE_PRIVATE)
@@ -52,14 +46,14 @@ class DetailedNewsActivity : AppCompatActivity() {
                 webView_news.getSettings().setJavaScriptEnabled(true)
                 webView_news.loadDataWithBaseURL(
                     null,
-                    HtmlFormatUtil.getNewContent(price.getContent()),
+                    HtmlFormatUtil.getNewContent(price.content),
                     "text/html",
                     "UTF-8",
                     null
                 )
                 webView_news.setWebViewClient(object : WebViewClient() {
                     val loadProgressDialog =
-                        LoadProgressDialog(this@DetailedNewsActivity, "数据加载中……")
+                        LoadProgressDialog(this@ReadHistoryNewsActivity, "数据加载中……")
 
                     override fun onPageFinished(view: WebView?, url: String) {
                         super.onPageFinished(view, url)
@@ -94,8 +88,8 @@ class DetailedNewsActivity : AppCompatActivity() {
         mDisposable.add(mApiService.getReadtise(resId)
             .compose(RxUtils.schedulersTransformer())
             .subscribe({ readBean ->
-                Log.d(TAG, "acceptgetReadtise>>>>>? $readBean")
-            }) { throwable -> Log.d(TAG, "loadMore: $throwable") })
+                Log.d(ContentValues.TAG, "acceptgetReadtise>>>>>? $readBean")
+            }) { throwable -> Log.d(ContentValues.TAG, "loadMore: $throwable") })
     }
 
     /**
@@ -107,12 +101,12 @@ class DetailedNewsActivity : AppCompatActivity() {
         mDisposable.add(mApiService.favoritesImages(resId, 1)
             .compose(RxUtils.schedulersTransformer())
             .subscribe({ favoritesBean ->
-                Log.d(TAG, "favoritesBean: $favoritesBean")
+                Log.d(ContentValues.TAG, "favoritesBean: $favoritesBean")
                 ToastUtil.showToast(application, "收藏成功！")
                 favorites_btn.setVisibility(View.GONE)
                 favorites_btn_delet.setVisibility(View.VISIBLE)
             }) { throwable ->
-                Log.d(TAG, "loadMore: $throwable")
+                Log.d(ContentValues.TAG, "loadMore: $throwable")
             })
     }
 
@@ -127,7 +121,7 @@ class DetailedNewsActivity : AppCompatActivity() {
             .compose(RxUtils.schedulersTransformer())
             .subscribe({ favoritesBean ->
                 Log.d(
-                    TAG, "favoritesBean: $favoritesBean"
+                    ContentValues.TAG, "favoritesBean: $favoritesBean"
                 )
                 ToastUtil.showToast(application, "取消收藏！")
                 favorites_btn.setVisibility(View.VISIBLE)
@@ -135,7 +129,7 @@ class DetailedNewsActivity : AppCompatActivity() {
             }
             ) { throwable ->
                 Log.d(
-                    TAG, "loadMore: $throwable"
+                    ContentValues.TAG, "loadMore: $throwable"
                 )
             })
     }

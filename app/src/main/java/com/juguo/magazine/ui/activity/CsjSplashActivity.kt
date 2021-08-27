@@ -19,11 +19,16 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.fenghuajueli.lib_ad.AdConfig
 import com.fenghuajueli.lib_ad.AdShowUtils
+import com.fenghuajueli.lib_ad.AdShowUtils.AdConfigBuilder
 import com.google.gson.Gson
+import com.jeremyliao.liveeventbus.BuildConfig
 import com.juguo.getRequestBody
 import com.juguo.magazine.App
 import com.juguo.magazine.R
+import com.juguo.magazine.event.CSJ_APP_ID
+import com.juguo.magazine.event.CSJ_CHAP_ID
 import com.juguo.magazine.event.CSJ_CODE_ID
 import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
@@ -150,9 +155,21 @@ class CsjSplashActivity : Activity() {
             //            checkPermission();
             Requestlogin()
             dialog.dismiss()
+            ThirdPartySdk()
             showAd()
         }
     }
+
+    fun ThirdPartySdk() {
+        //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+        val config = AdConfigBuilder()
+            .setAdAppId(CSJ_APP_ID)
+            .setSplashId(CSJ_CODE_ID)
+            .setInteractionExpressId(CSJ_CHAP_ID)
+            .builder()
+        AdShowUtils.getInstance().initAdConfig(App.sInstance, BuildConfig.DEBUG, config)
+    }
+
 
     private fun showAd() {
         if (App.sInstance.isShowAd) {

@@ -13,10 +13,7 @@ import com.juguo.magazine.adapter.GwhpPopupwindowAdapter
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.MarketPkgsBean
 import com.juguo.magazine.databinding.MineFragmentBinding
-import com.juguo.magazine.ui.activity.AboutActivity
-import com.juguo.magazine.ui.activity.HelpActivity
-import com.juguo.magazine.ui.activity.PrivacyActivity
-import com.juguo.magazine.ui.activity.UserAgreementActivity
+import com.juguo.magazine.ui.activity.*
 import com.juguo.magazine.util.CommUtils
 import com.juguo.magazine.util.NoScrollGridView
 import com.juguo.magazine.util.ToastUtil
@@ -46,10 +43,9 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
             ToastUtil.showToast(App.sInstance, "清理缓存成功")
         }
         mBinding.linearLayoutYdjl.setOnClickListener {
-            ToastUtil.showToast(
-                App.sInstance,
-                "阅读记录？？？？？？？？？？？？？？？？？？？？？？？？？"
-            )
+            val intent = Intent()
+            intent.setClass(App.sInstance, ReadingRecordActivity::class.java)
+            startActivity(intent)
         }
         mBinding.linearLayoutYszc.setOnClickListener {
             val intent = Intent()

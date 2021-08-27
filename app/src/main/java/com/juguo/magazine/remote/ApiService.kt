@@ -58,4 +58,13 @@ interface ApiService {
     @GET("app/appid/{appId}")
     fun getAppIdAdvertise(@Path("appId") appId: String?): Observable<AppIdBean>
 
+    //阅读记录
+    @GET("res-ext/{id}")
+    fun getReadtise(@Path("id") id: String?): Observable<ReadBean>
+
+    //瀑布流
+    @POST("res-ext/history-list")
+    fun getReadHistory(@Body bean: RequestBody?): Observable<ReadHistoryBean>
+
+
 }

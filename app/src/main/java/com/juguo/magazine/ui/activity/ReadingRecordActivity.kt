@@ -15,51 +15,103 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.adapter.MoreNewRecordAdapter
+import com.juguo.magazine.adapter.NewRecordAdapter
+import com.juguo.magazine.adapter.ReadRecordAdapter
 import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.bean.PieceBean
-import com.juguo.magazine.databinding.FashionMagazineActivityBinding
+import com.juguo.magazine.bean.ReadHistoryBean
+import com.juguo.magazine.databinding.ReadingRecordActivityBinding
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.viewmodel.FashionMagazineViewModel
+import com.juguo.magazine.viewmodel.ReadingRecordModel
+import com.zhpan.bannerview.constants.PageStyle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fashion_magazine_activity.*
+import kotlinx.android.synthetic.main.activity_detailed_news.*
 import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.android.synthetic.main.home_fragment.recyclerView
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
-class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any?>() {
-    override val getLayoutId = R.layout.fashion_magazine_activity
-    private val mViewModel: FashionMagazineViewModel by viewModels()
-    private lateinit var mAdapter: MoreNewRecordAdapter
+class ReadingRecordActivity : BaseActivity<ReadingRecordActivityBinding,ReadingRecordModel>() {
+    override val getLayoutId = R.layout.reading_record_activity
+    private val mViewModel: ReadingRecordModel by viewModels()
+    private lateinit var mAdapter: ReadRecordAdapter
     private lateinit var mHandler: Handler
     private var page = 1
     private val mDisposable = CompositeDisposable()
-    var price: MutableLiveData<List<PieceBean.Price>> = MutableLiveData<List<PieceBean.Price>>()
+    var price: MutableLiveData<List<ReadHistoryBean.ReadHistory>> = MutableLiveData<List<ReadHistoryBean.ReadHistory>>()
     @JvmField
     protected var mApiService = RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
-    override fun onViewCreate(savedInstanceState: Bundle?) {
-        super.onViewCreate(savedInstanceState)
-        mBinding.fashionMagazineViewmodel = mViewModel //绑定布局的viewmodel
-        promPtf()
-        moreNews()
-        back_zhazhi.setOnClickListener { finish() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        back_zhazhi_xq.setOnClickListener { finish() }
+        readingRecord()
+        reading()
     }
 
-    fun getData(isRefresh: Boolean) {
+    /**
+     * 阅读记录
+     */
+    private fun reading() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mAdapter = ReadRecordAdapter(this)
+        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView.setLayoutManager(GridLayoutManager(this, 1))
+        recyclerView.setAdapter(mAdapter)
+        recyclerView.addRefreshAction(Action {
+            if (mAdapter == null) {
+                getReadingData(true)
+            } else {
+                recyclerView.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView.addLoadMoreErrorAction(Action {
+            getReadingData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView.addLoadMoreAction(Action {
+            if (mAdapter == null) {
+                getReadingData(false)
+            } else {
+                recyclerView.showNoMore()
+            }
+        })
+        recyclerView.post(Runnable {
+            recyclerView.showSwipeRefresh()
+            getReadingData(true)
+        })
+        mAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, ReadHistoryNewsActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get("ReadHistoryBean",ReadHistoryBean.ReadHistory::class.java)
+                .post(data)
+        }
+    }
+
+
+    fun getReadingData(isRefresh: Boolean) {
+        val loadProgressDialog = LoadProgressDialog(this, "数据加载中……")
+        loadProgressDialog.show()
         mHandler.postDelayed(Runnable {
             if (isRefresh) {
                 page = 1
                 mAdapter.clear()
-                mAdapter.addAll(price.getValue())
+                mAdapter.addAll(price.value)
                 recyclerView.dismissSwipeRefresh()
                 recyclerView.getRecyclerView().scrollToPosition(0)
+                loadProgressDialog.dismiss()
             } else if (page == 5) {
+                //加载错误
                 mAdapter.showLoadMoreError()
             } else {
-                mAdapter.addAll(price.getValue())
+                mAdapter.addAll(price.value)
                 if (page >= 11) {
                     recyclerView.showNoMore()
                 }
@@ -67,56 +119,11 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
         }, 500)
     }
 
-    /**
-     * 最新资讯
-     */
-    private fun promPtf() {
-        mHandler = Handler(Looper.myLooper()!!)
-        mAdapter = MoreNewRecordAdapter(this)
-        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
-        recyclerView.setLayoutManager(GridLayoutManager(this, 2))
-        recyclerView.setAdapter(mAdapter)
-        recyclerView.addRefreshAction(Action {
-            if (mAdapter == null) {
-                getData(true)
-            } else {
-                recyclerView.dismissSwipeRefresh() //圈圈消失
-            }
-        })
-        recyclerView.addLoadMoreErrorAction(Action {
-            getData(false)
-            page++
-        })
-        //上拉加载更多
-        recyclerView.addLoadMoreAction(Action {
-            if (mAdapter == null) {
-                getData(false)
-            } else {
-                recyclerView.showNoMore()
-            }
-        })
-        recyclerView.post(Runnable {
-            recyclerView.showSwipeRefresh()
-            getData(true)
-        })
-        mAdapter.setOnItemClickListener { data ->
-            val intent = Intent()
-            intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
-            startActivity(intent)
-            LiveEventBus
-                .get(PieceBean.Price::class.java)
-                .post(data)
-        }
-    }
 
-    /**
-     * 最新资讯
-     */
-    fun moreNews() {
+    fun readingRecord() {
         val map: MutableMap<String, Any> = mutableMapOf(
             "order" to "desc",
             "sort" to "add_time",
-            "type" to 314
         )
         //{"param":{map}}
         val param: MutableMap<String, Any> =  mutableMapOf("param" to map)
@@ -124,15 +131,15 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
             MediaType.get("application/json; charset=utf-8"),
             Gson().toJson(param)
         )
-        mDisposable.add(mApiService.getList(body)
+        mDisposable.add(mApiService.getReadHistory(body)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ pieceBean ->
+            .subscribe({ ReadHistoryBean ->
                 Log.d(
                     ContentValues.TAG,
-                    "loadMore: $pieceBean"
+                    "getReadHistory***************: ${ReadHistoryBean}"
                 )
-                price.postValue(pieceBean.getPrice())
+                price.value = ReadHistoryBean.list
             }) { throwable ->
                 Log.d(
                     ContentValues.TAG,
@@ -140,4 +147,6 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
                 )
             })
     }
+
+
 }

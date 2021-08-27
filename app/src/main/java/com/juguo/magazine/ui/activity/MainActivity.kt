@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding, Any?>() {
     private val TAG = "MainActivity"
     override val getLayoutId = R.layout.activity_main
     private val mViewPager: ViewPager? = null //lateinit：如果不延迟初始化变量，必须要设为null，或者初始化这个变量
@@ -79,19 +79,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun redaGiao(){
         //定义底部标签图片大小 第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
         val page_selector = resources.getDrawable(R.drawable.page_selector)
-        page_selector.setBounds(0, 0, 70, 70)
+        page_selector.setBounds(0, 0, 65, 65)
         mBinding.rbHome.setCompoundDrawables(null, page_selector, null, null) //只放上面
 
         val magazine_selector = resources.getDrawable(R.drawable.magazine_selector)
-        magazine_selector.setBounds(0, 0, 70, 70)
+        magazine_selector.setBounds(0, 0, 65, 65)
         mBinding.rbAdd.setCompoundDrawables(null, magazine_selector, null, null)
 
         val find_selector = resources.getDrawable(R.drawable.find_selector)
-        find_selector.setBounds(0, 0, 70, 70)
+        find_selector.setBounds(0, 0, 65, 65)
         mBinding.rbFind.setCompoundDrawables(null, find_selector, null, null)
 
         val mine_selector = resources.getDrawable(R.drawable.mine_selector)
-        mine_selector.setBounds(0, 0, 70, 70)
+        mine_selector.setBounds(0, 0, 65, 65)
         mBinding.rbOthers.setCompoundDrawables(null, mine_selector, null, null)
 
     }

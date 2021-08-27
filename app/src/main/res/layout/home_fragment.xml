@@ -97,12 +97,15 @@
                             android:textColor="#FF191818"
                             android:textSize="16sp" />
 
-                        <ImageView
+                        <TextView
                             android:layout_width="@dimen/dp_30"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:background="@mipmap/ic_new" />
+                            android:layout_height="@dimen/dp_11"
+                            android:gravity="center"
+                            android:text="NEW"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dp_7"
+                            android:layout_marginLeft="@dimen/dp_3"
+                            android:background="@drawable/shap_text_new" />
 
                         <LinearLayout
                             android:id="@+id/more_new"
@@ -159,12 +162,15 @@
                             android:textColor="#FF191818"
                             android:textSize="16sp" />
 
-                        <ImageView
-                            android:layout_width="@dimen/dp_18"
-                            android:layout_height="@dimen/dp_18"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:background="@mipmap/ic_hot" />
+                        <TextView
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_11"
+                            android:gravity="center"
+                            android:text="HOT"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dp_7"
+                            android:layout_marginLeft="@dimen/dp_3"
+                            android:background="@drawable/shap_text_new" />
                     </LinearLayout>
 
                     <cn.lemon.view.RefreshRecyclerView

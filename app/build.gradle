@@ -17,6 +17,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        flavorDimensions "versionCode"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,6 +39,56 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+
+    productFlavors {
+        xiaomi {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+        }
+        oppo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "oppo"]
+        }
+        vivo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "vivo"]
+        }
+        huawei {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "huawei"]
+        }
+        meizu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "meizu"]
+        }
+        sanxing {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "sanxing"]
+        }
+        yingyongbao {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yingyongbao"]
+        }
+        none {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "none"]
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            // 输出apk名称为WeiLaiCheng1.0_2018-08-13.apk
+            def fileName = "${defaultConfig.applicationId}_${variant.productFlavors[0].name}_${defaultConfig.versionName}.apk"
+            outputFileName = fileName
+        }
+    }
+
+    signingConfigs {
+        sign {
+            storeFile file("D:\\Juguo Android project\\AiGo\\AiGos\\app\\keystore\\AiGos.jks")
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+        }
+
+        debug {
+            storeFile file("D:\\Juguo Android project\\AiGo\\AiGos\\app\\keystore\\AiGos.jks")
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+        }
     }
 }
 

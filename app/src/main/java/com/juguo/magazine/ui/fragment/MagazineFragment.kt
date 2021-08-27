@@ -52,25 +52,26 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        promPtf()
         magazineFormation()
+        promPtf()
     }
 
     fun getData(isRefresh: Boolean) {
-        val loadProgressDialog = LoadProgressDialog(context, "数据加载中……")
-        loadProgressDialog.show()
-        mHandler.postDelayed(Runnable {
+        val loadProgressDialog = LoadProgressDialog(mActivity, "数据加载中……").apply { show() }
+        mHandler.postDelayed({
             if (isRefresh) {
                 page = 1
                 mClassifitoinAdapter.clear()
-                mClassifitoinAdapter.addAll(price.getValue())
-                recyclerView_fenlei.dismissSwipeRefresh()
-                recyclerView_fenlei.getRecyclerView().scrollToPosition(0)
+                mClassifitoinAdapter.addAll(price.value)
+                recyclerView_fenlei.apply {
+                    dismissSwipeRefresh()
+                    recyclerView.scrollToPosition(0)
+                }
                 loadProgressDialog.dismiss()
             } else if (page == 5) {
                 mClassifitoinAdapter.showLoadMoreError()
             } else {
-                mClassifitoinAdapter.addAll(price.getValue())
+                mClassifitoinAdapter.addAll(price.value)
                 if (page >= 11) {
                     recyclerView_fenlei.showNoMore()
                 }
@@ -81,32 +82,38 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
     private fun promPtf() {
         mHandler = Handler(Looper.myLooper()!!)
         mClassifitoinAdapter = ClassifitionRecordAdapter(context)
-        recyclerView_fenlei.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
-        recyclerView_fenlei.setLayoutManager(GridLayoutManager(context, 2))
-        recyclerView_fenlei.setAdapter(mClassifitoinAdapter)
-        recyclerView_fenlei.addRefreshAction(Action {
-            if (mClassifitoinAdapter == null) {
-                getData(true)
-            } else {
-                recyclerView_fenlei.dismissSwipeRefresh() //圈圈消失
+        recyclerView_fenlei.apply {
+            setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+            setLayoutManager(GridLayoutManager(context, 2))
+            setAdapter(mClassifitoinAdapter)
+            addRefreshAction{
+                Log.e(TAG, "promPtf: addRefreshAction", )
+                if (mClassifitoinAdapter == null) {
+                    getData(true)
+                } else {
+                    dismissSwipeRefresh() //圈圈消失
+                }
             }
-        })
-        recyclerView_fenlei.addLoadMoreErrorAction(Action {
-            getData(false)
-            page++
-        })
-        //上拉加载更多
-        recyclerView_fenlei.addLoadMoreAction(Action {
-            if (mClassifitoinAdapter == null) {
+            addLoadMoreErrorAction {
                 getData(false)
-            } else {
-                recyclerView_fenlei.showNoMore()
+                page++
             }
-        })
-        recyclerView_fenlei.post(Runnable {
-            recyclerView_fenlei.showSwipeRefresh()
-            getData(true)
-        })
+            addLoadMoreAction{
+                if (mClassifitoinAdapter == null) {
+                    getData(false)
+                } else {
+                    showNoMore()
+                }
+            }
+            post {
+                Log.e(TAG, "promPtf: addRefreshAction", )
+                if (!this@MagazineFragment.isHidden) {
+                    showSwipeRefresh()
+                    getData(true)
+                }
+            }
+        }
+        //上拉加载更多
         mClassifitoinAdapter.setOnItemClickListener { data ->
             val intent = Intent()
             intent.setClass(App.sInstance, ClassifitionDetailsActivity::class.java)

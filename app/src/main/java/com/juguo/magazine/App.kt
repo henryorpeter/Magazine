@@ -1,8 +1,10 @@
 package com.juguo.magazine
 
 import android.app.Application
+import android.content.SharedPreferences
 import com.fenghuajueli.lib_ad.AdShowUtils
 import com.fenghuajueli.lib_ad.AdShowUtils.AdConfigBuilder
+import com.fenghuajueli.lib_ad.BuildConfig
 import com.juguo.magazine.event.CSJ_APP_ID
 import com.juguo.magazine.event.CSJ_CHAP_ID
 import com.juguo.magazine.event.CSJ_CODE_ID
@@ -14,16 +16,22 @@ import com.juguo.magazine.event.CSJ_CODE_ID
  * @Author : yangjinjing
  */
 class App : Application() {
+
     companion object {
         lateinit var sInstance: App
     }
-
+    //是否是第一次使用
+    private var isFirstUse = false
     var isShowAd = false
 
     override fun onCreate() {
         super.onCreate()
         sInstance = this
-        ThirdPartySdk()
+        val preferences = getSharedPreferences("isFirstUse", MODE_PRIVATE)
+        isFirstUse = preferences.getBoolean("isFirstUse", false)
+        if (isFirstUse) {
+            ThirdPartySdk()
+        }
     }
 
     fun ThirdPartySdk() {
