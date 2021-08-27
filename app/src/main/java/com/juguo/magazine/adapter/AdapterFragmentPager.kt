@@ -14,9 +14,7 @@ import com.juguo.magazine.ui.fragment.MineFragment
  *  description :
  * @Author : yangjinjing
  */
-class AdapterFragmentPager(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
-    fragmentActivity
-) {
+class AdapterFragmentPager(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {

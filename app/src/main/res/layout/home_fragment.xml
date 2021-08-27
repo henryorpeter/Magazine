@@ -37,7 +37,7 @@
                     android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="Bodoni 72"
+                    android:fontFamily="@font/fang_song"
                     android:gravity="center"
                     android:lineSpacingExtra="50dp"
                     android:text="@string/home_name"

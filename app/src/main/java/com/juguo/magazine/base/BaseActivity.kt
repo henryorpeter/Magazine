@@ -40,28 +40,6 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
         return mImmersionBar
     }
 
-    protected open fun onViewCreate(savedInstanceState: Bundle?) {} /*
-    private void initLoadingEvent() {
-        // 弹窗回调
-        mViewMdeol.getLoadingLiveData()
-                .getShowDialog()
-                .observe(this, s -> {
-                    //创建LoadProgressDialog
-                    LoadProgressDialog loadProgressDialog=new LoadProgressDialog(BaseActivity.this,"登录中……");
-                    //显示
-                    loadProgressDialog.show();
-                });
+    protected open fun onViewCreate(savedInstanceState: Bundle?) {}
 
-        // 关闭弹窗
-        mViewMdeol.getLoadingLiveData()
-                .getDismissDialog()
-                .observe(this, unused -> {
-                    // close dialog
-                    LoadProgressDialog loadProgressDialog=new LoadProgressDialog(BaseActivity.this,"登录中……");
-                    //销毁
-                    loadProgressDialog.dismiss();
-                });
-    }
-*/
-    //布局
 }

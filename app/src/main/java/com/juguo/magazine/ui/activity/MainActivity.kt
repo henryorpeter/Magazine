@@ -17,6 +17,7 @@ import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -43,6 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun initData() {
         with(mBinding.vpFragment) {
             adapter = AdapterFragmentPager(this@MainActivity)
+            vp_fragment.isUserInputEnabled = false //禁止滑动
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
