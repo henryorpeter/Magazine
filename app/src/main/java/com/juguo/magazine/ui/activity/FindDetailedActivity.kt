@@ -28,6 +28,10 @@ import kotlinx.android.synthetic.main.activity_detailed_news.*
 import kotlinx.android.synthetic.main.fashion_magazine_activity.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import android.webkit.WebSettings
+
+
+
 
 class FindDetailedActivity : AppCompatActivity() {
 
@@ -50,6 +54,10 @@ class FindDetailedActivity : AppCompatActivity() {
                 val editor = sp.edit()
                 editor.putString("resId", price.id).apply()
                 Log.e("TAG", "onChanged: " + Gson().toJson(price))
+                val settings: WebSettings = webView_news.getSettings()
+                //设置自适应屏幕，两者合用
+                settings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+                settings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
                 webView_news.getSettings().setJavaScriptEnabled(true)
                 webView_news.loadDataWithBaseURL(
                     null,

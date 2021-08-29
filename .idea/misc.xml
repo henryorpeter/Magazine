@@ -7,14 +7,18 @@
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_maazin_mb.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_text_new.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shape_button.xml" value="0.38229166666666664" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_about.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_find.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_news.xml" value="0.2" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_help.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_privacy.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_privacy_policys.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_splash.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_user_agreement.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/banner_news_consume.xml" value="0.21014492753623187" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/classification_consume.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/dialog_agree.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/fashion_magazine_activity.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/find_consume.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/find_fragment.xml" value="0.36614583333333334" />
@@ -29,6 +33,7 @@
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/reading_record_activity.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/view_empty.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/view_update_version.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/webview_text.xml" value="0.36614583333333334" />
       </map>
     </option>
   </component>

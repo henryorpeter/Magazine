@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,10 @@ class DetailedNewsActivity : AppCompatActivity() {
                 val editor = sp.edit()
                 editor.putString("resId", price.id).apply()
                 Log.e("TAG", "onChangedssss: " + Gson().toJson(price))
+                val settings: WebSettings = webView_news.getSettings()
+                //设置自适应屏幕，两者合用
+                settings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+                settings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
                 webView_news.getSettings().setJavaScriptEnabled(true)
                 webView_news.loadDataWithBaseURL(
                     null,

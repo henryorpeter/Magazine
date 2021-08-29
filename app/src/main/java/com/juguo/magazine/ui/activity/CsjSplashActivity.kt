@@ -19,6 +19,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.fenghuajueli.lib_ad.AdConfig
 import com.fenghuajueli.lib_ad.AdShowUtils
 import com.fenghuajueli.lib_ad.AdShowUtils.AdConfigBuilder
@@ -40,6 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.mine_fragment.*
 
 import java.util.*
 
@@ -81,9 +83,9 @@ class CsjSplashActivity : Activity() {
             showAd()
             return
         }
-        val relativeLayout = layoutInflater.inflate(R.layout.dialog_agree, null) as LinearLayout
-        val bt_cancel = relativeLayout.findViewById<View>(R.id.bt_cancle) as Button
-        val bt_sure = relativeLayout.findViewById<View>(R.id.bt_sure) as Button
+        val relativeLayout = layoutInflater.inflate(R.layout.dialog_agree, null) as CardView
+        val bt_cancel = relativeLayout.findViewById<View>(R.id.bt_cancle) as TextView
+        val bt_sure = relativeLayout.findViewById<View>(R.id.bt_sure) as TextView
         val tv_message = relativeLayout.findViewById<View>(R.id.tv_message) as TextView
         val userLicenseAgreement = "《用户协议》"
         val privacyAgreement = "《隐私政策》"
@@ -110,10 +112,10 @@ class CsjSplashActivity : Activity() {
         }
         val privacyClickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-//                val userLicenseIntent =
-//                    Intent(this@CsjSplashActivity, PrivacyPolicysActivity::class.java)
-//                userLicenseIntent.putExtra("url", "file:///android_asset/web/PrivacyPolicys.html")
-//                startActivity(userLicenseIntent)
+                val userLicenseIntent =
+                    Intent(this@CsjSplashActivity, PrivacyPolicysActivity::class.java)
+                userLicenseIntent.putExtra("url", "file:///android_asset/web/PrivacyPolicys.html")
+                startActivity(userLicenseIntent)
             }
         }
         spannableStringBuilder.setSpan(
@@ -134,6 +136,7 @@ class CsjSplashActivity : Activity() {
             .setView(relativeLayout)
             .setCancelable(false)
             .create()
+        dialog.setView(relativeLayout,0,0,0,0)
         dialog.show()
 
         //放在show()之后，不然有些属性是没有效果的，比如height和width
@@ -144,7 +147,7 @@ class CsjSplashActivity : Activity() {
         // 设置宽度
         p.width = (d.width * 0.95).toInt() // 宽度设置为屏幕的0.95
         p.gravity = Gravity.CENTER //设置位置
-        //p.alpha = 0.8f;//设置透明度
+        //p.alpha = 0.5f;//设置透明度
         dialogWindow.attributes = p
         bt_cancel.setOnClickListener { v: View? ->
             dialog.dismiss()
