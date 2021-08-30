@@ -47,7 +47,7 @@
                     android:layout_gravity="center"
                     android:singleLine="true"
                     android:fontFamily="FZShuSong-Z01S"
-                    android:text="@{}"
+                    android:text="@string/news_name"
                     android:textColor="#FF242424" />
 
             </androidx.appcompat.widget.Toolbar>
