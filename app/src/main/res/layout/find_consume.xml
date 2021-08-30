@@ -52,6 +52,8 @@
         android:textSize="14sp"
         android:textColor="#FF191818"
         android:fontFamily="FZShuSong-Z01S"
+        android:ellipsize="end"
+        android:lines="2"
         android:gravity="left"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
