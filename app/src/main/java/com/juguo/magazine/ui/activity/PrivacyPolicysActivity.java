@@ -1,6 +1,8 @@
 package com.juguo.magazine.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.juguo.magazine.App;
 import com.juguo.magazine.R;
 import com.juguo.magazine.util.UITools;
 
@@ -33,7 +36,8 @@ public class PrivacyPolicysActivity extends AppCompatActivity {
                 .navigationBarDarkIcon(true)
                 .init();
     }
-    private void userAgree(){
+
+    private void userAgree() {
         urlWebView = (WebView) findViewById(R.id.webView);
         urlWebView.getSettings().setJavaScriptEnabled(true);
         String url = getIntent().getStringExtra("url");
@@ -44,8 +48,16 @@ public class PrivacyPolicysActivity extends AppCompatActivity {
         });
         urlWebView.loadUrl(url);
     }
+
     private void onclick() {
         tvqx = findViewById(R.id.tv_qx);
-        tvqx.setOnClickListener(v -> finish());
+        tvqx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(App.sInstance, CsjSplashActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

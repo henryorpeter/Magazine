@@ -9,10 +9,10 @@
         android:id="@+id/imageView_new"
         android:layout_width="@dimen/dp_145"
         android:layout_height="@dimen/dp_185"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@mipmap/advertise1"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/textView3"

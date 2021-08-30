@@ -8,7 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 abstract class BaseViewModel : ViewModel() {
-    private var mDisposable = CompositeDisposable()
+    protected var mDisposable = CompositeDisposable()
 
     private var mLoadingLiveData // 显示加载框用的
             =LoadingLiveData()

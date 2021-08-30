@@ -63,7 +63,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
                 page = 1
                 mClassifitoinAdapter.clear()
                 mClassifitoinAdapter.addAll(price.value)
-                recyclerView_fenlei.apply {
+                recyclerView_fenlei?.apply {
                     dismissSwipeRefresh()
                     recyclerView.scrollToPosition(0)
                 }
@@ -121,7 +121,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
             LiveEventBus
                 .get("CategoryKey",CategoryBean.Category::class.java)
                 .post(data)
-            Log.i(TAG,"")
+            Log.i(TAG,"CategoryKey...............")
         }
     }
 

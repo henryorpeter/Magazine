@@ -1,8 +1,10 @@
 package com.juguo.magazine.ui.fragment
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
@@ -14,6 +16,7 @@ import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.MarketPkgsBean
 import com.juguo.magazine.databinding.MineFragmentBinding
 import com.juguo.magazine.ui.activity.*
+import com.juguo.magazine.util.CacheDataManager
 import com.juguo.magazine.util.CommUtils
 import com.juguo.magazine.util.NoScrollGridView
 import com.juguo.magazine.util.ToastUtil
@@ -40,7 +43,10 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
 
     private fun onClick() {
         mBinding.linearLayout5.setOnClickListener {
-            ToastUtil.showToast(App.sInstance, "清理缓存成功")
+            var cacheAllSize = CacheDataManager.getTotalCacheSize(context)
+            CacheDataManager.clearAllCache(context);
+            Log.i(TAG,"清理缓存?>>?>?>?>?>?>?" + cacheAllSize)
+            ToastUtil.showLongToast(App.sInstance, "成功清理缓存" + cacheAllSize)
         }
         mBinding.linearLayoutYdjl.setOnClickListener {
             val intent = Intent()

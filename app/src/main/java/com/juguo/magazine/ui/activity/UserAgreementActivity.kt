@@ -1,16 +1,18 @@
 package com.juguo.magazine.ui.activity
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.gyf.barlibrary.ImmersionBar
+import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.util.LoadProgressDialog
 import com.juguo.magazine.util.UITools
 import kotlinx.android.synthetic.main.activity_privacy.*
+
 
 /**
  *  author : Administrator
@@ -60,6 +62,11 @@ class UserAgreementActivity : AppCompatActivity() {
     }
 
     private fun onclick() {
-        tv_qx.setOnClickListener({ v: View? -> finish() })
+        tv_qx.setOnClickListener {
+            val intent = Intent()
+            intent.setClass(App.sInstance, CsjSplashActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

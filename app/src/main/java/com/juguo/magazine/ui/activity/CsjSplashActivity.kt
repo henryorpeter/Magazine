@@ -108,6 +108,7 @@ class CsjSplashActivity : Activity() {
                     "file:///android_asset/web/UserLicenseAgreement.html"
                 )
                 startActivity(userLicenseIntent)
+                finish()
             }
         }
         val privacyClickableSpan: ClickableSpan = object : ClickableSpan() {
@@ -116,6 +117,8 @@ class CsjSplashActivity : Activity() {
                     Intent(this@CsjSplashActivity, PrivacyPolicysActivity::class.java)
                 userLicenseIntent.putExtra("url", "file:///android_asset/web/PrivacyPolicys.html")
                 startActivity(userLicenseIntent)
+                finish()
+
             }
         }
         spannableStringBuilder.setSpan(
@@ -136,7 +139,7 @@ class CsjSplashActivity : Activity() {
             .setView(relativeLayout)
             .setCancelable(false)
             .create()
-        dialog.setView(relativeLayout,0,0,0,0)
+        dialog.setView(relativeLayout, 0, 0, 0, 0)
         dialog.show()
 
         //放在show()之后，不然有些属性是没有效果的，比如height和width
@@ -214,7 +217,7 @@ class CsjSplashActivity : Activity() {
                 } else if ("SYS" == startAdFlag) {
 
                 }
-                showPrivacyDialog ()
+                showPrivacyDialog()
             }) { throwable -> Log.d(TAG, "loadMore: $throwable") })
     }
 

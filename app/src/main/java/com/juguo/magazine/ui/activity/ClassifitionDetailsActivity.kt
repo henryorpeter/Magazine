@@ -48,6 +48,7 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
         LiveEventBus.get("CategoryKey",CategoryBean.Category::class.java)
             .observeSticky(this){
                 moreNews(it)
+                tv_title_op.setText(it.name)
             }
         mBinding.backZhazhi.setOnClickListener { finish() }
     }
@@ -114,7 +115,7 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
     }
 
     /**
-     * 最新资讯
+     * 杂志分类。。。。。。
      */
     fun moreNews(bean: CategoryBean.Category) {
         //mutableMapOf 可变的map

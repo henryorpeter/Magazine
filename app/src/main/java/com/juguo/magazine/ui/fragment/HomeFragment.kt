@@ -70,6 +70,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
+            bannerNews()
             promPtf()
             moreNews()
             hotInformation()
@@ -79,6 +80,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         //初始化 SwipeRefreshLayout
         swipeRefresh.init {
             //触发刷新监听时请求数据
+            bannerNews()
             promPtf()
             moreNews()
             hotInformation()
@@ -245,6 +247,43 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     /**
      * 最新资讯
      */
+    fun bannerNews() {
+        val map: MutableMap<String, Any> = mutableMapOf(
+            "order" to "desc",
+            "sort" to "add_time",
+            "type" to 315
+        )
+        //{"param":{map}}
+        val param: MutableMap<String, Any> =  mutableMapOf("param" to map)
+        val body = RequestBody.create(
+            MediaType.get("application/json; charset=utf-8"),
+            Gson().toJson(param)
+        )
+        mDisposable.add(mApiService.getList(body)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ pieceBean ->
+                Log.d(
+                    ContentValues.TAG,
+                    "loadMore: $pieceBean"
+                )
+                priceNew.value =pieceBean.price//主线程用setValue
+
+                setupBanner(
+                    PageStyle.MULTI_PAGE_SCALE,
+                    resources.getDimensionPixelOffset(R.dimen.dp_53)
+                )
+            }) { throwable ->
+                Log.d(
+                    ContentValues.TAG,
+                    "loadMore: $throwable"
+                )
+            })
+    }
+
+    /**
+     * 最新资讯
+     */
     fun moreNews() {
         val map: MutableMap<String, Any> = mutableMapOf(
             "order" to "desc",
@@ -266,11 +305,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         "loadMore: $pieceBean"
                     )
                     priceNew.value =pieceBean.price//主线程用setValue
-
-                    setupBanner(
-                        PageStyle.MULTI_PAGE_SCALE,
-                        resources.getDimensionPixelOffset(R.dimen.dp_53)
-                    )
                 }) { throwable ->
                     Log.d(
                         ContentValues.TAG,
