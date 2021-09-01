@@ -75,4 +75,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RelativeLayout
+        android:id="@+id/rel_home"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/webView_news"
+        app:layout_constraintEnd_toEndOf="@+id/webView_news"
+        app:layout_constraintStart_toStartOf="@+id/webView_news"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <ProgressBar
+            android:id="@+id/progressbar_home"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:indeterminateDrawable="@drawable/progressbar" />
+
+        <TextView
+            android:id="@+id/tv_xiazaijhindu"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_below="@id/progressbar_home"
+            android:gravity="center"
+            android:text="下载中" />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
