@@ -11,10 +11,10 @@ package com.juguo.magazine.event
 //    var BASE_URL = "http://172.16.0.32:8080/";
 
 // 测试环境 const=常量
-const val BASE_URL = "http://app.91juguo.com/testJ/";
+//const val BASE_URL = "http://app.91juguo.com/testJ/";
 
 // 正式环境
-//    var BASE_URL = "http://app.91juguo.com/api/"
+    var BASE_URL = "http://app.91juguo.com/api/"
 
 // 微信appId
 val WX_APP_ID = "wx923B3vfd7783bF93"

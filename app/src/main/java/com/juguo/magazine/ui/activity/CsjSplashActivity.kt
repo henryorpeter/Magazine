@@ -162,7 +162,7 @@ class CsjSplashActivity : Activity() {
             Requestlogin()
             dialog.dismiss()
             ThirdPartySdk()
-            showAd()
+            showTwoAd()
         }
     }
 
@@ -176,13 +176,19 @@ class CsjSplashActivity : Activity() {
         AdShowUtils.getInstance().initAdConfig(App.sInstance, BuildConfig.DEBUG, config)
     }
 
+    private fun showTwoAd() {
+        if (App.sInstance.isShowAd) {
+            hideBottomUIMenu() //隐藏虚拟按键，并且全屏
+            AdShowUtils.getInstance().loadSplashAd(this, mSplashContainer) { initViewAndData() }
+        } else {
+            initViewAndData()
+        }
+    }
 
     private fun showAd() {
         if (App.sInstance.isShowAd) {
             hideBottomUIMenu() //隐藏虚拟按键，并且全屏
-            AdShowUtils.getInstance().loadSplashAd(
-                this, mSplashContainer
-            ) { goToMainActivity() }
+            AdShowUtils.getInstance().loadSplashAd(this, mSplashContainer) { goToMainActivity() }
         } else {
             goToMainActivity()
         }
