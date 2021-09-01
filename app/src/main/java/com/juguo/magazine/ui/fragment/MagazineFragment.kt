@@ -2,9 +2,8 @@ package com.juguo.magazine.ui.fragment
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -12,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import cn.lemon.view.adapter.Action
 import com.google.gson.Gson
+import com.hjq.permissions.Permission
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
@@ -31,6 +31,12 @@ import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.magazine_fragment.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import com.hjq.permissions.XXPermissions
+import com.juguo.magazine.ui.activity.MainActivity
+
+import com.hjq.permissions.OnPermissionCallback
+import com.juguo.magazine.util.ToastUtil
+
 
 class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
     override val getLayoutId=R.layout.magazine_fragment
@@ -87,7 +93,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
             setLayoutManager(GridLayoutManager(context, 2))
             setAdapter(mClassifitoinAdapter)
             addRefreshAction{
-                Log.e(TAG, "promPtf: addRefreshAction", )
+                Log.e(TAG, "promPtf: addRefreshAction")
                 if (mClassifitoinAdapter == null) {
                     getData(true)
                 } else {
@@ -106,7 +112,7 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
                 }
             }
             post {
-                Log.e(TAG, "promPtf: addRefreshAction", )
+                Log.e(TAG, "promPtf: addRefreshAction")
                 if (!this@MagazineFragment.isHidden) {
                     showSwipeRefresh()
                     getData(true)

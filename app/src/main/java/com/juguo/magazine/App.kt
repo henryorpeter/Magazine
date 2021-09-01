@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.fenghuajueli.lib_ad.AdShowUtils
 import com.fenghuajueli.lib_ad.AdShowUtils.AdConfigBuilder
 import com.fenghuajueli.lib_ad.BuildConfig
+import com.hjq.permissions.XXPermissions
 import com.juguo.magazine.event.CSJ_APP_ID
 import com.juguo.magazine.event.CSJ_CHAP_ID
 import com.juguo.magazine.event.CSJ_CODE_ID
@@ -27,6 +28,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         sInstance = this
+        // 当前项目是否已经适配了分区存储的特性
+        XXPermissions.setScopedStorage(true)
         val preferences = getSharedPreferences("isFirstUse", MODE_PRIVATE)
         isFirstUse = preferences.getBoolean("isFirstUse", false)
         if (isFirstUse) {

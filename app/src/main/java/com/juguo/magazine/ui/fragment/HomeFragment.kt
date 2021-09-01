@@ -1,8 +1,10 @@
 package com.juguo.magazine.ui.fragment
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -37,6 +39,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.home_fragment.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import java.lang.Exception
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     //界面状态管理者
@@ -51,6 +54,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private val mDisposable = CompositeDisposable()
     var price: MutableLiveData<List<PieceBean.Price>> = MutableLiveData<List<PieceBean.Price>>()
     var priceNew: MutableLiveData<List<PieceBean.Price>> = MutableLiveData<List<PieceBean.Price>>()
+    var priceBanner: MutableLiveData<List<PieceBean.Price>> = MutableLiveData<List<PieceBean.Price>>()
+
     @JvmField
     protected var mApiService = RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
 
@@ -133,7 +138,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             .setScrollDuration(800)
             .setRevealWidth(leftRevealWidth, rightRevealWidth)
             .setPageStyle(pageStyle)
-            .create(priceNew.value) //List<T> data == List<PieceBean.Price>
+            .create(priceBanner.value) //List<T> data == List<PieceBean.Price>
 
     }
 
@@ -267,8 +272,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     ContentValues.TAG,
                     "loadMore: $pieceBean"
                 )
-                priceNew.value =pieceBean.price//主线程用setValue
-
+                priceBanner.value =pieceBean.price//主线程用setValue
                 setupBanner(
                     PageStyle.MULTI_PAGE_SCALE,
                     resources.getDimensionPixelOffset(R.dimen.dp_53)

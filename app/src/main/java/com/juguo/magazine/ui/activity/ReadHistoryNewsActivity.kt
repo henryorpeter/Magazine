@@ -2,26 +2,29 @@ package com.juguo.magazine.ui.activity
 
 import android.content.ContentValues
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.bean.ReadHistoryBean
+import com.juguo.magazine.event.creatFiles
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
-import com.juguo.magazine.util.HtmlFormatUtil
-import com.juguo.magazine.util.LoadProgressDialog
-import com.juguo.magazine.util.RxUtils
-import com.juguo.magazine.util.ToastUtil
+import com.juguo.magazine.util.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_detailed_news.*
+import java.io.File
+import java.lang.Exception
 
 class ReadHistoryNewsActivity : AppCompatActivity() {
 
@@ -30,7 +33,7 @@ class ReadHistoryNewsActivity : AppCompatActivity() {
     @JvmField
     protected var mApiService =
         RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
-
+    val mWebView = WebView(App.sInstance)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detailed_news)
@@ -44,34 +47,63 @@ class ReadHistoryNewsActivity : AppCompatActivity() {
                 val editor = sp.edit()
                 editor.putString("resId", price.id).apply()
                 Log.e("TAG", "onChangedssss: " + Gson().toJson(price))
-                val settings: WebSettings = webView_news.getSettings()
-                //设置自适应屏幕，两者合用
-                settings.setUseWideViewPort(true); //将图片调整到适合webview的大小
-                settings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-                webView_news.getSettings().setJavaScriptEnabled(true)
-                webView_news.loadDataWithBaseURL(
-                    null,
-                    HtmlFormatUtil.getNewContent(price.content),
-                    "text/html",
-                    "UTF-8",
-                    null
-                )
-                webView_news.setWebViewClient(object : WebViewClient() {
-                    val loadProgressDialog =
-                        LoadProgressDialog(this@ReadHistoryNewsActivity, "数据加载中……")
+                try {
+                    val f: File = File(creatFiles, price.id + ".pdf")
+                    if (!f.exists()) {
+                        DownloadUtil.get().download(
+                            price.content, creatFiles, price.id + ".pdf",
+                            object : DownloadUtil.OnDownloadListener {
+                                override fun onDownloadSuccess(file: File?) {
+                                    Log.e("TAG", "下载完成 ")
+                                    val file: File =
+                                        File(
+                                            creatFiles,
+                                            price.id + ".pdf"
+                                        )
+                                    var uri = Uri.fromFile(file)
+                                    webView_news.fromUri(uri)
+                                        //是否允许翻页，默认是允许翻页
+                                        .enableSwipe(true)
+                                        .defaultPage(0)
+                                        .enableAnnotationRendering(true)
+                                        .swipeHorizontal(false)
+                                        .spacing(10)
+                                        .load()
+                                }
 
-                    override fun onPageFinished(view: WebView?, url: String) {
-                        super.onPageFinished(view, url)
-                        // 加载完成
-                        loadProgressDialog.dismiss()
-                    }
+                                override fun onDownloading(progress: Int) {
+                                    this@ReadHistoryNewsActivity.runOnUiThread(Runnable {
+                                        if (progress <= 99) {
+                                            rel_home.visibility = View.VISIBLE
+                                            progressbar_home.setProgress(progress)
+                                            tv_xiazaijhindu.setText("下载中" + progress + "%")
+                                        }else{
+                                            rel_home.visibility = View.GONE
+                                        }
+                                        Log.v(ContentValues.TAG, "下載進度" + progress);
+                                    })
+                                }
 
-                    override fun onPageStarted(view: WebView?, url: String, favicon: Bitmap?) {
-                        super.onPageStarted(view, url, favicon)
-                        //开始加载
-                        loadProgressDialog.show()
+                                override fun onDownloadFailed(e: Exception?) {
+                                    Log.e("TAG", "下载失败 $e")
+                                }
+                            })
+                    } else {
+                        val file: File =
+                            File(creatFiles, price.id + ".pdf")
+                        var uri = Uri.fromFile(file)
+                        webView_news.fromUri(uri)
+                            //是否允许翻页，默认是允许翻页
+                            .enableSwipe(true)
+                            .defaultPage(0)
+                            .enableAnnotationRendering(true)
+                            .swipeHorizontal(false)
+                            .spacing(10)
+                            .load()
                     }
-                })
+                } catch (e: Exception) {
+                    Log.e(ContentValues.TAG,"Exception$e")
+                }
             })
     }
 
@@ -137,6 +169,15 @@ class ReadHistoryNewsActivity : AppCompatActivity() {
                     ContentValues.TAG, "loadMore: $throwable"
                 )
             })
+    }
+
+    override fun onDestroy() {
+        if (mWebView != null) {
+            mWebView.removeAllViews();
+            webView_news.removeView(webView_news);
+            mWebView.destroy();
+        }
+        super.onDestroy()
     }
 
 }

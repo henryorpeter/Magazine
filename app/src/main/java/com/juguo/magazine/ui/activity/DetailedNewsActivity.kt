@@ -1,15 +1,24 @@
 package com.juguo.magazine.ui.activity
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.google.gson.Gson
 import com.gyf.barlibrary.ImmersionBar
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -18,6 +27,7 @@ import com.juguo.magazine.R
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.bean.ReadBean
 import com.juguo.magazine.event.WX_APP_ID
+import com.juguo.magazine.event.creatFiles
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.util.*
@@ -25,9 +35,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_detailed_news.*
-import kotlinx.android.synthetic.main.fashion_magazine_activity.*
-import okhttp3.MediaType
-import okhttp3.RequestBody
+
+import java.io.File
+import com.juguo.magazine.util.DownloadUtil
+import com.juguo.magazine.util.DownloadUtil.OnDownloadListener
+import kotlinx.android.synthetic.main.view_empty.*
+import retrofit2.http.Url
+import java.lang.Exception
+
 
 class DetailedNewsActivity : AppCompatActivity() {
 
@@ -36,13 +51,15 @@ class DetailedNewsActivity : AppCompatActivity() {
     @JvmField
     protected var mApiService =
         RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
+    val mWebView = WebView(App.sInstance)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detailed_news)
+        setContentView(com.juguo.magazine.R.layout.activity_detailed_news)
         back_zhazhi_xq.setOnClickListener { finish() }
         onClick()
         getReadtise()
+
         LiveEventBus.get(PieceBean.Price::class.java)
             .observeSticky(this, { price ->
                 //写入sp保存图片id
@@ -50,34 +67,64 @@ class DetailedNewsActivity : AppCompatActivity() {
                 val editor = sp.edit()
                 editor.putString("resId", price.id).apply()
                 Log.e("TAG", "onChangedssss: " + Gson().toJson(price))
-                val settings: WebSettings = webView_news.getSettings()
-                //设置自适应屏幕，两者合用
-                settings.setUseWideViewPort(true); //将图片调整到适合webview的大小
-                settings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-                webView_news.getSettings().setJavaScriptEnabled(true)
-                webView_news.loadDataWithBaseURL(
-                    null,
-                    HtmlFormatUtil.getNewContent(price.getContent()),
-                    "text/html",
-                    "UTF-8",
-                    null
-                )
-                webView_news.setWebViewClient(object : WebViewClient() {
-                    val loadProgressDialog =
-                        LoadProgressDialog(this@DetailedNewsActivity, "数据加载中……")
 
-                    override fun onPageFinished(view: WebView?, url: String) {
-                        super.onPageFinished(view, url)
-                        // 加载完成
-                        loadProgressDialog.dismiss()
-                    }
+                try {
+                    val f: File = File(creatFiles, price.id + ".pdf")
+                    if (!f.exists()) {
+                        DownloadUtil.get().download(
+                            price.content, creatFiles, price.id + ".pdf",
+                            object : OnDownloadListener {
+                                override fun onDownloadSuccess(file: File?) {
+                                    Log.e("TAG", "下载完成 ")
+                                    val file: File =
+                                        File(
+                                            creatFiles,
+                                            price.id + ".pdf"
+                                        )
+                                    var uri = Uri.fromFile(file)
+                                    webView_news.fromUri(uri)
+                                        //是否允许翻页，默认是允许翻页
+                                        .enableSwipe(true)
+                                        .defaultPage(0)
+                                        .enableAnnotationRendering(true)
+                                        .swipeHorizontal(false)
+                                        .spacing(10)
+                                        .load()
+                                }
 
-                    override fun onPageStarted(view: WebView?, url: String, favicon: Bitmap?) {
-                        super.onPageStarted(view, url, favicon)
-                        //开始加载
-                        loadProgressDialog.show()
+                                override fun onDownloading(progress: Int) {
+                                    this@DetailedNewsActivity.runOnUiThread(Runnable {
+                                        if (progress <= 99) {
+                                            rel_home.visibility = View.VISIBLE
+                                            progressbar_home.setProgress(progress)
+                                            tv_xiazaijhindu.setText("下载中" + progress + "%")
+                                        }else{
+                                            rel_home.visibility = View.GONE
+                                        }
+                                        Log.v(TAG, "下載進度" + progress);
+                                    })
+                                }
+
+                                override fun onDownloadFailed(e: Exception?) {
+                                    Log.e("TAG", "下载失败 $e")
+                                }
+                            })
+                    } else {
+                        val file: File =
+                            File(creatFiles, price.id + ".pdf")
+                        var uri = Uri.fromFile(file)
+                        webView_news.fromUri(uri)
+                            //是否允许翻页，默认是允许翻页
+                            .enableSwipe(true)
+                            .defaultPage(0)
+                            .enableAnnotationRendering(true)
+                            .swipeHorizontal(false)
+                            .spacing(10)
+                            .load()
                     }
-                })
+                } catch (e: Exception) {
+                    Log.e(TAG,"Exception$e")
+                }
             })
     }
 
@@ -143,6 +190,15 @@ class DetailedNewsActivity : AppCompatActivity() {
                     TAG, "loadMore: $throwable"
                 )
             })
+    }
+
+    override fun onDestroy() {
+        if (mWebView != null) {
+            mWebView.removeAllViews();
+            webView_news.removeView(webView_news);
+            mWebView.destroy();
+        }
+        super.onDestroy()
     }
 
 }

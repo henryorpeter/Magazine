@@ -4,12 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/magazine_selector.xml" value="0.38229166666666664" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/progressbar.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_maazin_mb.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_text_new.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shape_button.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_about.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_find.xml" value="0.36614583333333334" />
-        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_news.xml" value="0.2" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_news.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_help.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_privacy.xml" value="0.36614583333333334" />
