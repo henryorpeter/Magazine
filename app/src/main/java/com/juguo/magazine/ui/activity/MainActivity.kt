@@ -12,6 +12,7 @@ import com.juguo.magazine.R
 import com.juguo.magazine.adapter.AdapterFragmentPager
 import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.databinding.ActivityMainBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.util.RxUtils
@@ -97,7 +98,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, Any?>() {
     }
 
     private fun initViewAndData() {
-        mDisposable.add(mApiService.getAppIdAdvertise("wx9ooOL2SleR78Slil")
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
             .compose(RxUtils.schedulersTransformer())
             .subscribe({ privacyBean ->
                 Log.d(TAG, "accept: $privacyBean")

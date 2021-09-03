@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/magazine_selector.xml" value="0.38229166666666664" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/mine_top_shaps.xml" value="0.3764102564102564" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/progressbar.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_maazin_mb.xml" value="0.38229166666666664" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/drawable/shap_text_new.xml" value="0.38229166666666664" />
@@ -41,7 +42,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="15" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="15" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

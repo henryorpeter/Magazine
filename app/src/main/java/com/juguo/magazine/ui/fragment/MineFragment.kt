@@ -26,7 +26,7 @@ import java.util.*
 class MineFragment : BaseFragment<MineFragmentBinding>() {
     override val getLayoutId = R.layout.mine_fragment
     private val viewModel: MineViewModel by viewModels()
-    private val installedMarketPkgs: ArrayList<MarketPkgsBean>? = null
+    private var installedMarketPkgs: ArrayList<MarketPkgsBean>? = null
 
     companion object {
         fun newInstance() = MineFragment()
@@ -39,6 +39,8 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        // 获取手机应用商店
+        installedMarketPkgs = CommUtils.getInstalledMarketPkgs(App.sInstance)
     }
 
     private fun onClick() {
@@ -59,7 +61,7 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
             startActivity(intent)
         }
         mBinding.linearLayoutSghp.setOnClickListener {
-            if (installedMarketPkgs != null && installedMarketPkgs.size > 0) {
+            if (installedMarketPkgs != null && installedMarketPkgs!!.size > 0) {
                 showSelectDialog()
             } else {
                 ToastUtil.showLongToast(App.sInstance, "手机暂无应用商店")
@@ -77,7 +79,7 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
         }
         mBinding.linearLayoutYhxy.setOnClickListener {
             val intent = Intent()
-            intent.setClass(App.sInstance, UserAgreementActivity::class.java)
+            intent.setClass(App.sInstance, UsersAgreementActivity::class.java)
             intent.putExtra("url", "file:///android_asset/web/UserLicenseAgreement.html")
             startActivity(intent)
         }
@@ -95,7 +97,7 @@ class MineFragment : BaseFragment<MineFragmentBinding>() {
         val grid_view: NoScrollGridView = diaView.findViewById(R.id.grid_view)
         val gwhpPopupwindowAdapter = GwhpPopupwindowAdapter(App.sInstance, installedMarketPkgs)
         grid_view.setAdapter(gwhpPopupwindowAdapter)
-        val builder = AlertDialog.Builder(App.sInstance)
+        val builder = AlertDialog.Builder(context)
         builder.setView(diaView)
         dialog = builder.create()
         dialog.setCanceledOnTouchOutside(true)

@@ -20,9 +20,9 @@ package com.juguo.magazine.event
 val WX_APP_ID = "wx923B3vfd7783bF93"
 
 // 穿山甲
-val CSJ_APP_ID = "5203733"
-val CSJ_CODE_ID = "887533589"
-val CSJ_CHAP_ID = "946505636" //插屏ID
+val CSJ_APP_ID = "5214141"
+val CSJ_CODE_ID = "887557539"
+val CSJ_CHAP_ID = "946656490" //插屏ID
 
 //下载路径
 var creatFiles = "/data/data/com.juguo.magazine/files"
