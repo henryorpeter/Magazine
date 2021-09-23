@@ -23,6 +23,7 @@ class App : Application() {
     }
     //是否是第一次使用
     private var isFirstUse = false
+
     var isShowAd = false
 
     override fun onCreate() {

@@ -1,11 +1,13 @@
 package com.juguo.magazine.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gyf.barlibrary.ImmersionBar
+import com.juguo.magazine.App
 import com.juguo.magazine.R
 import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
@@ -20,13 +22,16 @@ import kotlinx.android.synthetic.main.activity_privacy.*
  *  description :
  * @Author : yangjinjing
  */
-class PrivacyActivity : AppCompatActivity() {
+class PrivacysActivity : AppCompatActivity() {
     private val TAG = "cimoGallery"
+
     //private var urlWebView: WebView? = null   //为空对象，可能造成空指针异常
     //private lateinit var urlWebView: WebView   //可以声明为延迟加载  lateinit=延迟初始化
     private val mDisposable = CompositeDisposable()
+
     @JvmField
-    protected var mApiService = RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
+    protected var mApiService =
+        RetrofitManager.getApi(ApiService::class.java) //初始化请求接口ApiService，给继承的子类用
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +41,8 @@ class PrivacyActivity : AppCompatActivity() {
         initViewAndData()
         onclick()
         //解决白色状态栏
-        ImmersionBar.with(this)
-            .statusBarDarkFont(true)
-            .navigationBarDarkIcon(true)
-            .init()
+        ImmersionBar.with(this).statusBarDarkFont(true)
+            .navigationBarDarkIcon(true).init()
     }
 
     private fun initViewAndData() {
@@ -75,6 +78,11 @@ class PrivacyActivity : AppCompatActivity() {
 
     private fun onclick() {
         // alt+ enter
-        tv_qx.setOnClickListener { v: View? -> finish() }
+        tv_qx.setOnClickListener {
+            val intent = Intent()
+            intent.setClass(App.sInstance, CsjSplashActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

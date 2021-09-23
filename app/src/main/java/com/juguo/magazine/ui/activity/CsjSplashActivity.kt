@@ -24,6 +24,9 @@ import com.fenghuajueli.lib_ad.AdConfig
 import com.fenghuajueli.lib_ad.AdShowUtils
 import com.fenghuajueli.lib_ad.AdShowUtils.AdConfigBuilder
 import com.google.gson.Gson
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.jeremyliao.liveeventbus.BuildConfig
 import com.juguo.getRequestBody
 import com.juguo.magazine.App
@@ -114,8 +117,8 @@ class CsjSplashActivity : Activity() {
         val privacyClickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val userLicenseIntent =
-                    Intent(this@CsjSplashActivity, PrivacyPolicysActivity::class.java)
-                userLicenseIntent.putExtra("url", "file:///android_asset/web/PrivacyPolicys.html")
+                    Intent(this@CsjSplashActivity, PrivacysActivity::class.java)
+//                userLicenseIntent.putExtra("url", "file:///android_asset/web/PrivacyPolicys.html")
                 startActivity(userLicenseIntent)
                 finish()
 
@@ -194,19 +197,6 @@ class CsjSplashActivity : Activity() {
         }
     }
 
-    override fun onResume() {
-        //判断是否该跳转到主页面
-        if (mForceGoMain) {
-            goToMainActivity()
-        }
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mForceGoMain = true
-    }
-
     /**
      * 加载开屏广告
      */
@@ -235,10 +225,6 @@ class CsjSplashActivity : Activity() {
         startActivity(intent)
         //mSplashContainer.removeAllViews();  //移除所有视图
         finish()
-    }
-
-    private fun showToast(msg: String) {
-        ToastUtil.showToast(this, msg)
     }
 
     /**

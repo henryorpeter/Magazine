@@ -60,7 +60,33 @@ class MagazineFragment : BaseFragment<MagazineFragmentBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         magazineFormation()
         promPtf()
+        Qermissions()
     }
+
+    fun Qermissions(){
+        XXPermissions.with(this) // 不适配 Android 11 可以这样写
+            //.permission(Permission.Group.STORAGE)
+            // 适配 Android 11 需要这样写，这里无需再写 Permission.Group.STORAGE
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: List<String>, all: Boolean) {
+                    if (all) {
+//                        ToastUtil.showToast(App.sInstance,"获取存储权限成功")
+                    }
+                }
+
+                override fun onDenied(permissions: List<String>, never: Boolean) {
+                    if (never) {
+                        //ToastUtil.showToast(App.sInstance,"被永久拒绝授权，请手动授予存储权限")
+                        // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                        XXPermissions.startPermissionActivity(this@MagazineFragment, permissions)
+                    } else {
+                        //ToastUtil.showToast(App.sInstance,"获取存储权限失败")
+                    }
+                }
+            })
+    }
+
 
     fun getData(isRefresh: Boolean) {
         val loadProgressDialog = LoadProgressDialog(mActivity, "数据加载中……").apply { show() }

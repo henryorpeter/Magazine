@@ -23,11 +23,15 @@ import com.juguo.magazine.adapter.*
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.HomeFragmentBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.ui.activity.AdvertiseDetailedNewsActivity
 import com.juguo.magazine.ui.activity.DetailedNewsActivity
 import com.juguo.magazine.ui.activity.FashionMagazineActivity
+import com.juguo.magazine.ui.activity.NewsVideoPlayActivity
 import com.juguo.magazine.util.LoadProgressDialog
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.HomeViewModel
 import com.kingja.loadsir.core.LoadService
 import com.zhpan.bannerview.BannerViewPager
@@ -70,28 +74,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         mViewPager = mBinding.bannerView as BannerViewPager<PieceBean.Price>
-        initBVP()
+
         onClick()
-
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
-            bannerNews()
-            promPtf()
-            moreNews()
-            hotInformation()
-            hotPromPtf()
-        }, 200)
-
-        //初始化 SwipeRefreshLayout
-        swipeRefresh.init {
-            //触发刷新监听时请求数据
-            bannerNews()
-            promPtf()
-            moreNews()
-            hotInformation()
-            hotPromPtf()
-            swipeRefresh.setRefreshing(false)
-        }
+        AdvertisingSwitch()
     }
 
     //初始化 SwipeRefreshLayout
@@ -110,6 +95,25 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             adapter = HomeLoopAdapter().apply {
                 onItemDataCallback={ _, data ->
                     itemClick(data)
+                }
+            }
+            //setOnPageClickListener { _ , pieceBean -> itemClick(pieceBean)}不用设置参数类型
+
+            setInterval(4000)
+        }
+
+    }
+
+    /**
+     * 有广告时
+     */
+    private fun advertiseInitBanner() {
+        mViewPager.apply {
+            setLifecycleRegistry(lifecycle)
+            setIndicatorVisibility(GONE)   //banner小圆点不可见
+            adapter = HomeLoopAdapter().apply {
+                onItemDataCallback={ _, data ->
+                    advertiseItemClick(data)
                 }
             }
             //setOnPageClickListener { _ , pieceBean -> itemClick(pieceBean)}不用设置参数类型
@@ -145,6 +149,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun itemClick(bean: PieceBean.Price) {
         val intent = Intent()
         intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
+        startActivity(intent)
+        LiveEventBus
+            .get(PieceBean.Price::class.java)
+            .post(bean)
+    }
+
+    /**
+     * 有广告时
+     */
+    private fun advertiseItemClick(bean: PieceBean.Price) {
+        val intent = Intent()
+        intent.setClass(App.sInstance, AdvertiseDetailedNewsActivity::class.java)
         startActivity(intent)
         LiveEventBus
             .get(PieceBean.Price::class.java)
@@ -250,7 +266,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     /**
-     * 最新资讯
+     * 艺术banner
      */
     fun bannerNews() {
         val map: MutableMap<String, Any> = mutableMapOf(
@@ -387,5 +403,146 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 Log.d(ContentValues.TAG, "loadMore: $throwable")
             })
     }
+    /**
+     * 广告开关
+     */
+    fun AdvertisingSwitch(){
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(TAG, "<<<<<<<<<<AdvertisingSwitch>>>>>>>>>>>>: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                if ("NONE" == startAdFlag) {
+                    advertiseInitBanner()
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        AdvertisingpromPtf()
+                        AdvertisinghotPromPtf()
 
+                        bannerNews()
+                        moreNews()
+                        hotInformation()
+                    }, 200)
+
+                    //初始化 SwipeRefreshLayout
+                    swipeRefresh.init {
+                        //触发刷新监听时请求数据
+                        AdvertisingpromPtf()
+                        AdvertisinghotPromPtf()
+
+                        bannerNews()
+                        moreNews()
+                        hotInformation()
+                        swipeRefresh.setRefreshing(false)
+                    }
+                } else if ("CSJ" == startAdFlag) {
+                    initBVP()
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        bannerNews()
+                        promPtf()
+                        moreNews()
+                        hotInformation()
+                        hotPromPtf()
+                    }, 200)
+
+                    //初始化 SwipeRefreshLayout
+                    swipeRefresh.init {
+                        //触发刷新监听时请求数据
+                        bannerNews()
+                        promPtf()
+                        moreNews()
+                        hotInformation()
+                        hotPromPtf()
+                        swipeRefresh.setRefreshing(false)
+                    }
+
+                } else if ("SYS" == startAdFlag) {
+
+                }
+            }) { throwable -> Log.d(TAG, "loadMore: $throwable") })
+    }
+
+    /**
+     * 有哥广告时最新资讯
+     */
+    private fun AdvertisingpromPtf() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mAdapter = NewRecordAdapter(context)
+        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView.setLayoutManager(GridLayoutManager(context, 3))
+        recyclerView.setAdapter(mAdapter)
+        recyclerView.addRefreshAction(Action {
+            if (mAdapter == null) {
+                getNewsData(true)
+            } else {
+                recyclerView.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView.addLoadMoreErrorAction(Action {
+            getNewsData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView.addLoadMoreAction(Action {
+            if (mAdapter == null) {
+                getNewsData(false)
+            } else {
+                recyclerView.showNoMore()
+            }
+        })
+        recyclerView.post(Runnable {
+            recyclerView.showSwipeRefresh()
+            getNewsData(true)
+        })
+        mAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, NewsVideoPlayActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get(PieceBean.Price::class.java)
+                .post(data)
+        }
+    }
+    /**
+     * 有哥广告时热门资讯
+     */
+    private fun AdvertisinghotPromPtf() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mHotAdapter = HotRecordAdapter(context)
+        recyclerView_tuijian.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView_tuijian.setLayoutManager(GridLayoutManager(context, 1))
+        recyclerView_tuijian.setAdapter(mHotAdapter)
+        recyclerView_tuijian.addRefreshAction(Action {
+            if (mHotAdapter == null) {
+                getData(true)
+            } else {
+                recyclerView_tuijian.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView_tuijian.addLoadMoreErrorAction(Action {
+            getData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView_tuijian.addLoadMoreAction(Action {
+            if (mHotAdapter == null) {
+                getData(false)
+            } else {
+                recyclerView_tuijian.showNoMore()
+            }
+        })
+        recyclerView_tuijian.post(Runnable {
+            recyclerView_tuijian.showSwipeRefresh()
+            getData(true)
+        })
+        mHotAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, AdvertiseDetailedNewsActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get(PieceBean.Price::class.java)
+                .post(data)
+        }
+    }
 }

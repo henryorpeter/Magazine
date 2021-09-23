@@ -21,9 +21,11 @@ import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.bean.ReadHistoryBean
 import com.juguo.magazine.databinding.ReadingRecordActivityBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
 import com.juguo.magazine.util.LoadProgressDialog
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.FashionMagazineViewModel
 import com.juguo.magazine.viewmodel.ReadingRecordModel
 import com.zhpan.bannerview.constants.PageStyle
@@ -50,8 +52,28 @@ class ReadingRecordActivity : BaseActivity<ReadingRecordActivityBinding,ReadingR
         super.onCreate(savedInstanceState)
         back_zhazhi_xq.setOnClickListener { finish() }
         readingRecord()
-        reading()
+        AdvertisingSwitch()
     }
+
+    /**
+     * 广告开关
+     */
+    fun AdvertisingSwitch(){
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(ContentValues.TAG, "<<<<<<<<<<AdvertisingSwitch>>>>>>>>>>>>: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                if ("NONE" == startAdFlag) {
+                    advertionsReading()
+                } else if ("CSJ" == startAdFlag) {
+                    reading()
+                } else if ("SYS" == startAdFlag) {
+
+                }
+            }) { throwable -> Log.d(ContentValues.TAG, "loadMore: $throwable") })
+    }
+
 
     /**
      * 阅读记录
@@ -88,6 +110,48 @@ class ReadingRecordActivity : BaseActivity<ReadingRecordActivityBinding,ReadingR
         mAdapter.setOnItemClickListener { data ->
             val intent = Intent()
             intent.setClass(App.sInstance, ReadHistoryNewsActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get("ReadHistoryBean",ReadHistoryBean.ReadHistory::class.java)
+                .post(data)
+        }
+    }
+
+    /**
+     * GG广告阅读记录
+     */
+    private fun advertionsReading() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mAdapter = ReadRecordAdapter(this)
+        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView.setLayoutManager(GridLayoutManager(this, 1))
+        recyclerView.setAdapter(mAdapter)
+        recyclerView.addRefreshAction(Action {
+            if (mAdapter == null) {
+                getReadingData(true)
+            } else {
+                recyclerView.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView.addLoadMoreErrorAction(Action {
+            getReadingData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView.addLoadMoreAction(Action {
+            if (mAdapter == null) {
+                getReadingData(false)
+            } else {
+                recyclerView.showNoMore()
+            }
+        })
+        recyclerView.post(Runnable {
+            recyclerView.showSwipeRefresh()
+            getReadingData(true)
+        })
+        mAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, AdvertionReadHistoryNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get("ReadHistoryBean",ReadHistoryBean.ReadHistory::class.java)

@@ -26,10 +26,10 @@
                 android:id="@+id/tv_qx"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="17dp"
+                android:clickable="true"
                 android:gravity="center"
                 android:text="取消"
-                android:clickable="true"
-                android:layout_marginLeft="17dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -56,22 +56,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="21dp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ly_tv_title">
-
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ly_tv_title" />
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/ly_tv_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

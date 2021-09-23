@@ -14,12 +14,16 @@ import com.google.gson.Gson
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.juguo.magazine.App
 import com.juguo.magazine.R
+import com.juguo.magazine.adapter.HotRecordAdapter
 import com.juguo.magazine.adapter.MoreNewRecordAdapter
+import com.juguo.magazine.adapter.NewRecordAdapter
 import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.FashionMagazineActivityBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.FashionMagazineViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -43,8 +47,8 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
     override fun onViewCreate(savedInstanceState: Bundle?) {
         super.onViewCreate(savedInstanceState)
         mBinding.fashionMagazineViewmodel = mViewModel //绑定布局的viewmodel
-        promPtf()
         moreNews()
+        AdvertisingSwitch()
         back_zhazhi.setOnClickListener { finish() }
     }
 
@@ -68,7 +72,7 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
     }
 
     /**
-     * 最新资讯
+     * 有哥广告时最新资讯
      */
     private fun promPtf() {
         mHandler = Handler(Looper.myLooper()!!)
@@ -112,6 +116,67 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
     /**
      * 最新资讯
      */
+    private fun AdvertisingpromPtf() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mAdapter = MoreNewRecordAdapter(this)
+        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView.setLayoutManager(GridLayoutManager(this, 2))
+        recyclerView.setAdapter(mAdapter)
+        recyclerView.addRefreshAction(Action {
+            if (mAdapter == null) {
+                getData(true)
+            } else {
+                recyclerView.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView.addLoadMoreErrorAction(Action {
+            getData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView.addLoadMoreAction(Action {
+            if (mAdapter == null) {
+                getData(false)
+            } else {
+                recyclerView.showNoMore()
+            }
+        })
+        recyclerView.post(Runnable {
+            recyclerView.showSwipeRefresh()
+            getData(true)
+        })
+        mAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, NewsVideoPlayActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get(PieceBean.Price::class.java)
+                .post(data)
+        }
+    }
+
+    /**
+     * 广告开关
+     */
+    fun AdvertisingSwitch(){
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(ContentValues.TAG, "<<<<<<<<<<AdvertisingSwitch>>>>>>>>>>>>: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                if ("NONE" == startAdFlag) {
+                    AdvertisingpromPtf()
+                } else if ("CSJ" == startAdFlag) {
+                    promPtf()
+                } else if ("SYS" == startAdFlag) {
+
+                }
+            }) { throwable -> Log.d(ContentValues.TAG, "loadMore: $throwable") })
+    }
+
+    /**
+     * 最新资讯
+     */
     fun moreNews() {
         val map: MutableMap<String, Any> = mutableMapOf(
             "order" to "desc",
@@ -140,4 +205,5 @@ class FashionMagazineActivity : BaseActivity<FashionMagazineActivityBinding, Any
                 )
             })
     }
+
 }

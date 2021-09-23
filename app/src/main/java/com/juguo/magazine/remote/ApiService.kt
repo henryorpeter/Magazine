@@ -23,6 +23,11 @@ interface ApiService {
     @GET("app/last-v")
     fun getPrivacy(): Observable<PrivacyBean>
 
+    //隐私政策
+    @GET("app/appid/{appId}")
+    fun getPrivacyHt(@Path("appId") appId: String?): Observable<PrivacyBean>
+
+
     // 帮助反馈
     @POST("feedback/")
     fun getfeedBack(@Body body: RequestBody?): Observable<HelpResponseBean>

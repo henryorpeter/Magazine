@@ -10,26 +10,29 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/gywm_bt"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/gywm_bt"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:largeHeap="true"
-        android:hardwareAccelerated="true"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activity.NewsVideoPlayActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.activity.ReadingRecordActivity"
             android:exported="true" />
         <activity
             android:name=".ui.activity.CsjSplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/startactivitytheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,18 +40,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.PrivacyActivity" />
-        <activity android:name=".ui.activity.AboutActivity" />
-        <activity android:name=".ui.activity.HelpActivity" />
-        <activity android:name=".ui.activity.UserAgreementActivity" />
-        <activity android:name=".ui.activity.FashionMagazineActivity" />
-        <activity android:name=".ui.activity.ClassifitionDetailsActivity" />
-        <activity android:name=".ui.activity.FindDetailedActivity" />
-        <activity android:name=".ui.activity.DetailedNewsActivity" />
-        <activity android:name=".ui.activity.MainActivity" />
-        <activity android:name=".ui.activity.ReadHistoryNewsActivity"/>
-        <activity android:name=".ui.activity.PrivacyPolicysActivity"/>
-        <activity android:name=".ui.activity.UsersAgreementActivity"/>
+        <activity android:name=".ui.activity.PrivacyActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.AboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.HelpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.UserAgreementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.FashionMagazineActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.ClassifitionDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.FindDetailedActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.DetailedNewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.ReadHistoryNewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.UsersAgreementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.AdvertiseDetailedNewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.AdvertisonFindDetailedActivity" />
+        <activity android:name=".ui.activity.AdvertionReadHistoryNewsActivity" />
+        <activity android:name=".ui.activity.PrivacysActivity" />
     </application>
 
 </manifest>

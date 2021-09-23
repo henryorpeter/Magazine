@@ -19,10 +19,13 @@ import com.juguo.magazine.adapter.FindRecordAdapter
 import com.juguo.magazine.base.BaseFragment
 import com.juguo.magazine.bean.FavoritesListBean
 import com.juguo.magazine.databinding.FindFragmentBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.ui.activity.AdvertisonFindDetailedActivity
 import com.juguo.magazine.ui.activity.FindDetailedActivity
 import com.juguo.magazine.util.LoadProgressDialog
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.viewmodel.FindViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -57,7 +60,7 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         viewModel.favoritesList()
         favoritesList()
-        hotPromPtf()
+        AdvertisingSwitch()
         viewModel.favorites.observe(this) {
             Log.e(TAG, "favorites: 数据回调")
             mHotAdapter.clear()
@@ -88,6 +91,25 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
                 }
             }
         }, 500)
+    }
+
+    /**
+     * 广告开关
+     */
+    fun AdvertisingSwitch(){
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(ContentValues.TAG, "<<<<<<<<<<AdvertisingSwitch>>>>>>>>>>>>: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                if ("NONE" == startAdFlag) {
+                    advertisePromPtf()
+                } else if ("CSJ" == startAdFlag) {
+                    hotPromPtf()
+                } else if ("SYS" == startAdFlag) {
+
+                }
+            }) { throwable -> Log.d(ContentValues.TAG, "loadMore: $throwable") })
     }
 
     private val TAG = "FindFragment"
@@ -129,6 +151,54 @@ class FindFragment : BaseFragment<FindFragmentBinding>() {
         mHotAdapter.setOnItemClickListener { data ->
             val intent = Intent()
             intent.setClass(App.sInstance, FindDetailedActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get("favoritesKey", FavoritesListBean.Favorites::class.java)
+                .post(data)
+        }
+    }
+
+    /**
+     * 有gg广告
+     */
+    private fun advertisePromPtf() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mHotAdapter = FindRecordAdapter(context)
+        recyclerView_find.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView_find.setLayoutManager(GridLayoutManager(context, 1))
+        recyclerView_find.setAdapter(mHotAdapter)
+        recyclerView_find.addRefreshAction(Action {
+            Log.e(TAG, "addRefreshAction: ")
+            if (mHotAdapter == null) {
+                getData(true)
+            } else {
+                recyclerView_find.dismissSwipeRefresh() //圈圈消失
+            }
+            viewModel.favoritesList()
+        })
+        recyclerView_find.addLoadMoreErrorAction(Action {
+            Log.e(TAG, "addLoadMoreErrorAction: ")
+            getData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView_find.addLoadMoreAction(Action {
+            Log.e(TAG, "addLoadMoreAction: ")
+            if (mHotAdapter == null) {
+                getData(false)
+            } else {
+                recyclerView_find.showNoMore()
+            }
+        })
+        recyclerView_find.post(Runnable {
+            Log.e(TAG, "post: ")
+            recyclerView_find.showSwipeRefresh()
+            getData(true)
+        })
+
+        mHotAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, AdvertisonFindDetailedActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get("favoritesKey", FavoritesListBean.Favorites::class.java)

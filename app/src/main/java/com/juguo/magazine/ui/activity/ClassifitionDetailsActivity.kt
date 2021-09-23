@@ -23,8 +23,10 @@ import com.juguo.magazine.base.BaseActivity
 import com.juguo.magazine.bean.CategoryBean
 import com.juguo.magazine.bean.PieceBean
 import com.juguo.magazine.databinding.FashionMagazineActivityBinding
+import com.juguo.magazine.event.WX_APP_ID
 import com.juguo.magazine.remote.ApiService
 import com.juguo.magazine.remote.RetrofitManager
+import com.juguo.magazine.util.RxUtils
 import com.juguo.magazine.util.ToastUtil
 import com.juguo.magazine.viewmodel.FashionMagazineViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -49,7 +51,7 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
     override fun onViewCreate(savedInstanceState: Bundle?) {
         super.onViewCreate(savedInstanceState)
         mBinding.fashionMagazineViewmodel = mViewModel //绑定布局的viewmodel
-        promPtf()
+        AdvertisingSwitch()
         LiveEventBus.get("CategoryKey",CategoryBean.Category::class.java)
             .observeSticky(this){
                 moreNews(it)
@@ -57,27 +59,6 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
             }
         mBinding.backZhazhi.setOnClickListener { finish() }
 
-        XXPermissions.with(this) // 不适配 Android 11 可以这样写
-            //.permission(Permission.Group.STORAGE)
-            // 适配 Android 11 需要这样写，这里无需再写 Permission.Group.STORAGE
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .request(object : OnPermissionCallback {
-                override fun onGranted(permissions: List<String>, all: Boolean) {
-                    if (all) {
-//                        ToastUtil.showToast(App.sInstance,"获取存储权限成功")
-                    }
-                }
-
-                override fun onDenied(permissions: List<String>, never: Boolean) {
-                    if (never) {
-                        ToastUtil.showToast(App.sInstance,"被永久拒绝授权，请手动授予存储权限")
-                        // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                        XXPermissions.startPermissionActivity(this@ClassifitionDetailsActivity, permissions)
-                    } else {
-                        ToastUtil.showToast(App.sInstance,"获取存储权限失败")
-                    }
-                }
-            })
 
     }
 
@@ -99,6 +80,26 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
             }
         }, 500)
     }
+
+    /**
+     * 广告开关
+     */
+    fun AdvertisingSwitch(){
+        mDisposable.add(mApiService.getAppIdAdvertise(WX_APP_ID)
+            .compose(RxUtils.schedulersTransformer())
+            .subscribe({ privacyBean ->
+                Log.d(ContentValues.TAG, "<<<<<<<<<<AdvertisingSwitch>>>>>>>>>>>>: $privacyBean")
+                val startAdFlag: String = privacyBean.getResult().getStartAdFlag()
+                if ("NONE" == startAdFlag) {
+                    advertisePromPtf()
+                } else if ("CSJ" == startAdFlag) {
+                    promPtf()
+                } else if ("SYS" == startAdFlag) {
+
+                }
+            }) { throwable -> Log.d(ContentValues.TAG, "loadMore: $throwable") })
+    }
+
 
     /**
      * 最新资讯
@@ -135,6 +136,48 @@ class ClassifitionDetailsActivity : BaseActivity<FashionMagazineActivityBinding,
         mAdapter.setOnItemClickListener { data ->
             val intent = Intent()
             intent.setClass(App.sInstance, DetailedNewsActivity::class.java)
+            startActivity(intent)
+            LiveEventBus
+                .get(PieceBean.Price::class.java)
+                .post(data)
+        }
+    }
+
+    /**
+     * g广告最新资讯
+     */
+    private fun advertisePromPtf() {
+        mHandler = Handler(Looper.myLooper()!!)
+        mAdapter = MoreNewRecordAdapter(this)
+        recyclerView.setSwipeRefreshColors(-0xbc87bb, -0x1bb068, -0xd053df)
+        recyclerView.setLayoutManager(GridLayoutManager(this, 2))
+        recyclerView.setAdapter(mAdapter)
+        recyclerView.addRefreshAction(Action {
+            if (mAdapter == null) {
+                getData(true)
+            } else {
+                recyclerView.dismissSwipeRefresh() //圈圈消失
+            }
+        })
+        recyclerView.addLoadMoreErrorAction(Action {
+            getData(false)
+            page++
+        })
+        //上拉加载更多
+        recyclerView.addLoadMoreAction(Action {
+            if (mAdapter == null) {
+                getData(false)
+            } else {
+                recyclerView.showNoMore()
+            }
+        })
+        recyclerView.post(Runnable {
+            recyclerView.showSwipeRefresh()
+            getData(true)
+        })
+        mAdapter.setOnItemClickListener { data ->
+            val intent = Intent()
+            intent.setClass(App.sInstance, AdvertiseDetailedNewsActivity::class.java)
             startActivity(intent)
             LiveEventBus
                 .get(PieceBean.Price::class.java)

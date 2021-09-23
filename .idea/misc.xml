@@ -14,9 +14,10 @@
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_detailed_news.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_help.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_news_video_play.xml" value="0.34103260869565216" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_privacy.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_privacy_policys.xml" value="0.36614583333333334" />
-        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_splash.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/activity_user_agreement.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/banner_news_consume.xml" value="0.25" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/classification_consume.xml" value="0.36614583333333334" />
@@ -34,7 +35,7 @@
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/mine_fragment.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/more_news_consume.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/news_consume.xml" value="0.21014492753623187" />
-        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/read_consume.xml" value="0.36614583333333334" />
+        <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/read_consume.xml" value="0.33" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/reading_record_activity.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/view_empty.xml" value="0.36614583333333334" />
         <entry key="..\:/Juguo Android project/Magazines/app/src/main/res/layout/view_update_version.xml" value="0.36614583333333334" />
