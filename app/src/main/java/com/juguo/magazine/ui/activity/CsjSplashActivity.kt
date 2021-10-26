@@ -136,6 +136,7 @@ class CsjSplashActivity : Activity() {
             end_Privacy,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
+
         tv_message.movementMethod = LinkMovementMethod.getInstance()
         tv_message.text = spannableStringBuilder
         val dialog = AlertDialog.Builder(this)
